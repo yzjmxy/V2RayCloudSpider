@@ -23,15 +23,14 @@ elif 'linux' in sys.platform:
 # CHROMEDRIVER_PATH_for_LINUX = os.path.dirname(__file__) + '/MiddleKey/chromedriver'
 # CHROMEDRIVER_PATH_for_WIN32 = os.path.dirname(__file__) + '/MiddleKey/chromedriver.exe'
 
-# Function Base临时环境变量, format 中填写版本号
-SYS_PATH = '/qinse/V2RaycSpider{}'.format(verNum)
-
-# LOG_CSV文件路径
-SERVER_LOG_PATH = os.path.dirname(__file__) + '/dataBase/log_information.csv'
+# 项目驱动版本||被准驱动verNum：0925
+SYS_PATH = f'/qinse/V2RaycSpider{verNum}'
 
 # ROOT DATABASE
 ROOT_DATABASE = os.path.join(os.path.dirname(__file__), 'dataBase')
 
+# LOG_CSV文件路径
+SERVER_LOG_PATH = ROOT_DATABASE + '/log_information.csv'
 # ---------------------------------------------------
 # Cloud server configuration(SSH)
 # ---------------------------------------------------
@@ -41,11 +40,11 @@ ECS_USERNAME: str = 'root'
 ECS_PASSWORD: str = 'KYU77wh7vpRK'
 
 # 文件路径:查询可用订阅连接
-AviLINK_FILE_PATH = '/qinse/V2RaycSpider{}/funcBase/func_avi_num.py'.format(verNum)
+AviLINK_FILE_PATH = f'/qinse/V2RaycSpider{verNum}/funcBase/func_avi_num.py'
 # 文件路径:ssr链接抓取接口
-SSR_ENE_FILE_PATH = '/qinse/V2RaycSpider{}/funcBase/get_ssr_link.py'.format(verNum)
+SSR_ENE_FILE_PATH = f'/qinse/V2RaycSpider{verNum}/funcBase/get_ssr_link.py'
 # 文件路径:v2ray链接抓取接口
-V2RAY_ENE_FILE_PATH = '/qinse/V2RaycSpider{}/funcBase/get_v2ray_link.py'.format(verNum)
+V2RAY_ENE_FILE_PATH = f'/qinse/V2RaycSpider{verNum}/funcBase/get_v2ray_link.py'
 
 # Nginx映射路径
 NGINX_RES_PATH = '/usr/share/nginx/html'
@@ -53,7 +52,7 @@ NGINX_SSR_PATH = os.path.join(NGINX_RES_PATH, 'ssr.txt')
 NGINX_V2RAY_PATH = os.path.join(NGINX_RES_PATH, 'v2ray.txt')
 
 """********************************* Action set/PATH->Local ********************************"""
-# TODO: 当前版本不提供安装导航，不支持diy安装目录，若想更改缓存路径，请改动源代码
+# TODO: 当前版本不提供安装导航，不支持diy安装目录，若想更改缓存路径(默认当前文件夹)，请改动源代码
 # 工程目录
 ROOT_PROJECT_PATH = os.path.dirname(__file__)
 # 软件本地根目录
