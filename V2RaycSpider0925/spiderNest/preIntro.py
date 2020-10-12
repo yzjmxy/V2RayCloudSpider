@@ -334,7 +334,7 @@ def set_spiderOption(silence: bool, anti: bool):
 
     # 无反爬虫机制：高性能启动，禁止图片加载及js动画渲染，加快selenium页面切换效率
     def NonAnti():
-        chrome_prefs = {"profile.default_content_settings"        : {"images": 2, 'javascript': 2},
+        chrome_prefs = {"profile.default_content_settings": {"images": 2, 'javascript': 2},
                         "profile.managed_default_content_settings": {"images": 2}}
         options.experimental_options['prefs'] = chrome_prefs
         options.add_experimental_option('excludeSwitches', ['enable-automation'])
@@ -415,7 +415,12 @@ def TOS_STAFF(api, timeout: float):
         pass
 
 
-# 获取随即FAKE USERAGENT
+# 获取FAKE USERAGENT
 def get_header() -> str:
     from fake_useragent import UserAgent
-    return UserAgent().random
+    headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) '
+                             'AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.105 Safari/537.36'}
+
+    return headers['User-Agent']
+    # fixme: v4.2.1error
+    # return UserAgent().random

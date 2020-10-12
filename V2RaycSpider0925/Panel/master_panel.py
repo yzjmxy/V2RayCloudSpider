@@ -201,7 +201,6 @@ class SSRcS_panel(object):
         # FIXME:pyinstaller 打包bug；调用修改global value 会使本函数无法被main function transfer
         # FIXME:pyinstaller 打包正确运行情况：
 
-
         """调试版代码"""
         # from spiderNest.SSRcS_xjcloud import LocalResp
         # try:
@@ -222,7 +221,7 @@ class SSRcS_panel(object):
             return self.resTip(self.ssr_attention_link, 'ssr')
             # easygui.enterbox(msg=v_success, title=TITLE, default=self.ssr_attention_link)
 
-    def do_v2rayEne(self,):
+    def do_v2rayEne(self, ):
 
         """调试版代码"""
         # from spiderNest.V2Ray_vms import LocalResp
@@ -242,7 +241,6 @@ class SSRcS_panel(object):
         finally:
             return self.resTip(self.v2ray_attention_link, 'v2ray')
             # easygui.enterbox(msg=v_success, title=TITLE, default=self.v2ray_attention_link)
-
 
     @staticmethod
     def resTip(AttentionLink: str, task_name):
@@ -315,7 +313,7 @@ def checker():
     global report
     test_list = {
         'google': ('www.google.com', 443),
-        'baidu' : ('www.baidu.com', 443)
+        'baidu': ('www.baidu.com', 443)
     }
 
     PROXY_status = isNetChainOK(test_list['google'])
@@ -495,7 +493,7 @@ class PrepareENV(object):
             easygui.exceptionbox('>>> 环境初始化成功,正在尝试重启脚本', TITLE)
             try:
                 os.system('python {}'.format(os.path.join(ROOT_PROJECT_PATH, 'main.py')))
-                sys.exit()
+                # sys.exit()
             except OSError:
                 easygui.exceptionbox('查找失败，请手动重启脚本', TITLE)
 
@@ -531,7 +529,7 @@ class PrepareENV(object):
     def run_start(self, init=False):
         if init is True:
             # 初始化用户账号
-            self.init_fake_user_agent()
+            # self.init_fake_user_agent()
 
             # 初始化服务器信息
             self.init_service_info()
@@ -655,3 +653,7 @@ class V2RaycSpider_Master_Panel(object):
             resp = False
         finally:
             return resp
+
+
+if __name__ == '__main__':
+    V2RaycSpider_Master_Panel().home_menu()

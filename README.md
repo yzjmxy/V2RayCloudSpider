@@ -8,11 +8,11 @@
 
 ## :eagle: Quick Start
 
-- 下载项目并解压（约42.9 MB）
+- 【win10软件+源代码】下载项目并解压（约42.9 MB）
 
   ![1](https://i.loli.net/2020/10/06/1OPUtIfZSi3wq5R.png)
 
-- **运行脚本**||**开箱即用**
+- **运行脚本**||**开箱即用**（直接下载软件；约17MB）
 
   - [云彩姬使用说明](https://github.com/QIN2DIM/V2RayCloudSpider/blob/master/V2Ray云彩姬使用说明.md)![2](https://i.loli.net/2020/10/06/gKIZAPLd9JY8HQz.png)
 
