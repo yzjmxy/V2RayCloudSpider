@@ -8,7 +8,7 @@
 
 ## :eagle: Quick Start
 
-- 【win10软件+源代码】下载项目并解压（约42.9 MB）
+- 【win10软件+源代码】下载项目并解压（约36.6MB）
 
   ![1](https://i.loli.net/2020/10/06/1OPUtIfZSi3wq5R.png)
 
