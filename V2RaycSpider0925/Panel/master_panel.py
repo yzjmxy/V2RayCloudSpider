@@ -653,7 +653,3 @@ class V2RaycSpider_Master_Panel(object):
             resp = False
         finally:
             return resp
-
-
-if __name__ == '__main__':
-    V2RaycSpider_Master_Panel().home_menu()
