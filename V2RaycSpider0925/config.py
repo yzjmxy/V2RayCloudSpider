@@ -34,7 +34,7 @@ SERVER_LOG_PATH = ROOT_DATABASE + '/log_information.csv'
 # ---------------------------------------------------
 # Cloud server configuration(SSH)
 # ---------------------------------------------------
-ECS_HOSTNAME: str = '107.182.21.117'
+ECS_HOSTNAME: str = ''
 ECS_PORT: int = 27203
 ECS_USERNAME: str = 'root'
 ECS_PASSWORD: str = 'gZ25eWNDK3Kb'
@@ -58,9 +58,9 @@ NGINX_V2RAY_PATH = os.path.join(NGINX_RES_PATH, 'v2ray.txt')
 REDIS_DB: int = 0
 REDIS_KEY_NAME_BASE: str = 'v2rayc_spider:{}'
 
-REDIS_HOST: str = '107.182.21.117'
+REDIS_HOST: str = ''
 REDIS_PORT: int = 6379
-REDIS_PASSWORD: str = '663836'
+REDIS_PASSWORD: str = ''
 REDIS_DECODE_RESPONSES = True
 """********************************* Action set/PATH->Local ********************************"""
 # TODO: 当前版本不提供安装导航，不支持diy安装目录，若想更改缓存路径(默认当前文件夹)，请改动源代码
