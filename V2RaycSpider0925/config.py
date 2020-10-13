@@ -34,23 +34,34 @@ SERVER_LOG_PATH = ROOT_DATABASE + '/log_information.csv'
 # ---------------------------------------------------
 # Cloud server configuration(SSH)
 # ---------------------------------------------------
-ECS_HOSTNAME: str = ''
-ECS_PORT: int = 29710
+ECS_HOSTNAME: str = '107.182.21.117'
+ECS_PORT: int = 27203
 ECS_USERNAME: str = 'root'
-ECS_PASSWORD: str = 'KYU77wh7vpRK'
+ECS_PASSWORD: str = 'gZ25eWNDK3Kb'
 
 # 文件路径:查询可用订阅连接
-AviLINK_FILE_PATH = f'/qinse/V2RaycSpider{verNum}/funcBase/func_avi_num.py'
+CLOUD_PATH_BASE = '/qinse/V2RaycSpider{}/funcBase/{}.py'
+CLOUD_PATH_AviLINK = CLOUD_PATH_BASE.format(verNum, 'func_avi_num')
 # 文件路径:ssr链接抓取接口
-SSR_ENE_FILE_PATH = f'/qinse/V2RaycSpider{verNum}/funcBase/get_ssr_link.py'
+CLOUD_PATH_SSR = CLOUD_PATH_BASE.format(verNum, 'get_ssr_link')
 # 文件路径:v2ray链接抓取接口
-V2RAY_ENE_FILE_PATH = f'/qinse/V2RaycSpider{verNum}/funcBase/get_v2ray_link.py'
+CLOUD_PATH_V2RAY = CLOUD_PATH_BASE.format(verNum, 'get_v2ray_link')
 
 # Nginx映射路径
 NGINX_RES_PATH = '/usr/share/nginx/html'
 NGINX_SSR_PATH = os.path.join(NGINX_RES_PATH, 'ssr.txt')
 NGINX_V2RAY_PATH = os.path.join(NGINX_RES_PATH, 'v2ray.txt')
 
+# ---------------------------------------------------
+# Redis server configuration(SSH)
+# ---------------------------------------------------
+REDIS_DB: int = 0
+REDIS_KEY_NAME_BASE: str = 'v2rayc_spider:{}'
+
+REDIS_HOST: str = '107.182.21.117'
+REDIS_PORT: int = 6379
+REDIS_PASSWORD: str = '663836'
+REDIS_DECODE_RESPONSES = True
 """********************************* Action set/PATH->Local ********************************"""
 # TODO: 当前版本不提供安装导航，不支持diy安装目录，若想更改缓存路径(默认当前文件夹)，请改动源代码
 # 工程目录
@@ -66,4 +77,4 @@ START_MODE = 'local' if ECS_HOSTNAME == '' else 'cloud'
 """********************************* The core set ********************************"""
 
 # 我就是云彩姬!
-TITLE = f'V2Ray云彩姬_v{verNum}_{START_MODE}'
+TITLE = f'V2Ray云彩姬_v{verNum}'

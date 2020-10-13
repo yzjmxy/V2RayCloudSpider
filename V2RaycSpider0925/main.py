@@ -6,4 +6,6 @@ if __name__ == '__main__':
     try:
         vmp.home_menu()
     except Exception as e:
-        vmp.kill(e)
+        vmp.debug(e)
+    finally:
+        vmp.kill()

@@ -2,6 +2,7 @@ import csv
 import threading
 import webbrowser
 from datetime import datetime, timedelta
+from MiddleKey.redis_IO import RedisClient
 from config import *
 
 try:
@@ -142,7 +143,7 @@ def save_flow(dataFlow='N/A', class_=''):
 
 
 # Service connection
-def service_con(command):
+def service_con(command, ):
     # TODO: Hide server private information
     # FIXME: fix this bug now!!
     with paramiko.SSHClient() as ssh:
@@ -170,6 +171,7 @@ class SSRcS_panel(object):
     def __init__(self):
         # 启动GUI
         # self.Home()
+
         self.ssr_attention_link = ''
         self.v2ray_attention_link = ''
 
@@ -181,7 +183,7 @@ class SSRcS_panel(object):
         """
 
         # 获取服务器响应
-        avi_info = service_con('python3 {}'.format(AviLINK_FILE_PATH))
+        avi_info = service_con('python3 {}'.format(CLOUD_PATH_AviLINK))
 
         # 弹出提示
         if avi_info != '\n':
@@ -192,55 +194,23 @@ class SSRcS_panel(object):
         # 返回上一页
         return True
 
-    def do_ssrEne(self, ):
+    def run_spider_engine(self, mode: str, service_con_path):
         """
-        启动 ssr 爬虫
-        :return:
+        mode: ssr,v2ray,trojan
+        service_con_path:
+
         """
         # TODO
         # FIXME:pyinstaller 打包bug；调用修改global value 会使本函数无法被main function transfer
         # FIXME:pyinstaller 打包正确运行情况：
-
-        """调试版代码"""
-        # from spiderNest.SSRcS_xjcloud import LocalResp
-        # try:
-        #     if START_MODE == 'cloud':
-        #         # 先看有没有库存，若有直接拿,若无则启动脚本抓取ssr订阅链接
-        #         self.ssr_attention_link = service_con('python3 {}'.format(SSR_ENE_FILE_PATH))
-        #     elif START_MODE == 'local':
-        #         self.ssr_attention_link = LocalResp().start()
-        # finally:
-        #     # 分发结果
-        #     self.resTip(self.ssr_attention_link, 'ssr')
-        #     return True
-
-        """软件打包代码"""
         try:
-            self.ssr_attention_link = service_con('python3 {}'.format(SSR_ENE_FILE_PATH))
+            self.ssr_attention_link = rc.get(REDIS_KEY_NAME_BASE.format(mode))
+            if not self.ssr_attention_link:
+                self.ssr_attention_link = service_con(
+                    'python3 {}'.format(CLOUD_PATH_BASE.format(verNum, service_con_path)), )
         finally:
-            return self.resTip(self.ssr_attention_link, 'ssr')
+            return self.resTip(self.ssr_attention_link, mode)
             # easygui.enterbox(msg=v_success, title=TITLE, default=self.ssr_attention_link)
-
-    def do_v2rayEne(self, ):
-
-        """调试版代码"""
-        # from spiderNest.V2Ray_vms import LocalResp
-        # try:
-        #     if START_MODE == 'cloud':
-        #         # 获取v2ray订阅链接
-        #         self.v2ray_attention_link = service_con('python3 {}'.format(V2RAY_ENE_FILE_PATH))
-        #     elif START_MODE == 'local':
-        #         self.v2ray_attention_link = LocalResp().start()
-        # finally:
-        #     # 公示分发结果
-        #     return self.resTip(self.v2ray_attention_link, 'v2ray')
-
-        """软件打包代码"""
-        try:
-            self.v2ray_attention_link = service_con('python3 {}'.format(V2RAY_ENE_FILE_PATH))
-        finally:
-            return self.resTip(self.v2ray_attention_link, 'v2ray')
-            # easygui.enterbox(msg=v_success, title=TITLE, default=self.v2ray_attention_link)
 
     @staticmethod
     def resTip(AttentionLink: str, task_name):
@@ -287,7 +257,8 @@ report = ''
 def getReport():
     global report
     report = checker()
-    easygui.msgbox(report, TITLE, )
+    if '差' in report and '异常' in report:
+        easygui.msgbox(report, TITLE, )
 
 
 def isNetChainOK(test_server):
@@ -471,6 +442,8 @@ class sAirportSpider(object):
 
 """###################主菜单######################"""
 
+rc = RedisClient()
+
 
 # 所有初始化设置函数请在此编写
 class PrepareENV(object):
@@ -526,13 +499,14 @@ class PrepareENV(object):
         except FileNotFoundError:
             pass
 
-    def run_start(self, init=False):
+    @classmethod
+    def run_start(cls, init=False):
         if init is True:
             # 初始化用户账号
             # self.init_fake_user_agent()
 
-            # 初始化服务器信息
-            self.init_service_info()
+            # 初始化服务器信息;打包时弃用
+            # self.init_service_info()
 
             # 初始化Python第三方库
             # self.init_requirements()
@@ -543,13 +517,18 @@ class PrepareENV(object):
             # 初始化机场狗文档树
             INIT_airport_docTree()
 
+            return rc.test()
+
 
 class V2RaycSpider_Master_Panel(object):
 
     def __init__(self, init=True):
 
+        # 环境初始化
+        status_code = PrepareENV.run_start(init=init)
+
         # 主菜单
-        self.MAIN_HOME_MENU = ['[1]查看机场生态', '[2]获取订阅链接', '[3]检查网络状态', '[4]检查版本更新', '[5]退出', ]
+        self.MAIN_HOME_MENU = ['[1]查看机场生态', '[2]获取订阅链接', '[3]打开本地文件', '[4]检查版本更新', '[5]退出', ]
 
         # air_port_menu
         self.AIRPORT_HOME_MENU = ['[1]白嫖机场', '[2]高端机场', '[3]机场汇总', '[4]返回', '[5]退出']
@@ -557,27 +536,32 @@ class V2RaycSpider_Master_Panel(object):
         self.airHome = 'https://52bp.org'
 
         # 根据配置信息自动选择采集模式
-        self.SSR_HOME_MENU = ['[1]V2Ray订阅链接', '[2]SSR订阅链接', '[3]打开本地文件', '[4]查询可用链接', '[5]返回',
-                              '[6]退出'] if START_MODE == 'cloud' else \
-            ['[1]V2Ray订阅链接', '[2]SSR订阅链接', '[3]打开本地文件', '[4]返回', '[5]退出']
+        self.SSR_HOME_MENU = ['[1]V2Ray订阅链接', '[2]SSR订阅链接', '[3]Trojan订阅连接', '[4]查询可用链接', '[5]返回',
+                              '[6]退出']
 
-        # 环境初始化
-        pe = PrepareENV()
-        pe.run_start(init=init)
+        # 检查网络环境
+        # threading.Thread(target=getReport, ).start()
 
         # 自启
         # self.home_menu()
 
     @staticmethod
-    def kill(info):
+    def kill():
+        try:
+            rc.kill()
+        except Exception as e:
+            print(e)
+
+    @staticmethod
+    def debug(info):
         try:
             easygui.exceptionbox(info, TITLE)
-        except FileNotFoundError:
-            pass
+        except Exception as e:
+            print(e)
 
     def home_menu(self):
         """主菜单"""
-        # ['[1]查看机场生态', '[2]获取订阅链接', '[3]检查网络状态', '[4]检查版本更新', '[5]退出', ]
+        # ['[1]查看机场生态', '[2]获取订阅链接', '[3]检查版本更新', '[4]退出', ]
         resp = True
         usr_c = easygui.choicebox('功能列表', TITLE, self.MAIN_HOME_MENU, preselect=1)
         try:
@@ -585,9 +569,8 @@ class V2RaycSpider_Master_Panel(object):
                 resp = self.air_port_menu()
             elif '[2]获取订阅链接' in usr_c:
                 resp = self.ssr_spider_menu()
-            elif '网络' in usr_c:
-                threading.Thread(target=getReport, ).start()
-                easygui.ynbox('正在审查网络环境', 'V2Ray云彩姬')
+            elif '[3]打开本地文件' in usr_c:
+                os.startfile(SYS_LOCAL_vPATH)
             elif '更新' in usr_c:
                 easygui.textbox("封测阶段暂不开放联网更新接口！", title='V2Ray云彩姬')
             else:
@@ -632,17 +615,16 @@ class V2RaycSpider_Master_Panel(object):
         # 初始化进程冻结锁
         Freeze()
         resp = True
-
         # UI功能选择
         usr_c = easygui.choicebox('功能列表', TITLE, self.SSR_HOME_MENU, preselect=1)
+        sp = SSRcS_panel()
         try:
-            sp = SSRcS_panel()
             if '[1]V2Ray订阅链接' in usr_c:
-                resp = sp.do_v2rayEne()
+                resp = sp.run_spider_engine(mode='v2ray', service_con_path='get_v2ray_link')
             elif '[2]SSR订阅链接' in usr_c:
-                resp = sp.do_ssrEne()
-            elif '[3]打开本地文件' in usr_c:
-                os.startfile(SYS_LOCAL_vPATH)
+                resp = sp.run_spider_engine(mode='ssr', service_con_path='get_ssr_link')
+            elif '[3]Trojan订阅连接' in usr_c:
+                resp = sp.run_spider_engine(mode='trojan', service_con_path='get_trojan_link')
             elif '[4]查询可用链接' in usr_c:
                 resp = sp.find_aviLink()
             elif '[5]返回' in usr_c:

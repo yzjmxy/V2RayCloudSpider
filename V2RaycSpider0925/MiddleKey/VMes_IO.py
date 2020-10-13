@@ -1,5 +1,7 @@
 from spiderNest.preIntro import *
-from config import SYS_AIRPORT_INFO_PATH
+from MiddleKey.redis_IO import RedisClient
+from config import SYS_AIRPORT_INFO_PATH, REDIS_KEY_NAME_BASE
+import threading
 
 path_ = SYS_AIRPORT_INFO_PATH
 
@@ -9,6 +11,12 @@ def save_login_info(VMess, class_):
     VMess入库
     class_: ssr or v2ray
     """
+
+    # redis loaded
+    # RedisClient().add(key_name=REDIS_KEY_NAME_BASE.format(class_), value_of_link_attr=VMess)
+    threading.Thread(target=RedisClient().add, args=(REDIS_KEY_NAME_BASE.format(class_), VMess)).start()
+
+    # static data loaded
     now = str(datetime.now()).split('.')[0]
     with open(path_, 'a', encoding='utf-8', newline='') as f:
         writer = csv.writer(f)

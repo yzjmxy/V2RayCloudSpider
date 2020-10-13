@@ -108,6 +108,7 @@ class UFO_Spider(object):
 
         # 保存数据
         # save_login_info(self.VMess)
+
         VMes_IO.save_login_info(self.VMess, 'v2ray')
         # 安全退出
         api.quit()
