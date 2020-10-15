@@ -309,13 +309,13 @@ def checker():
 SYS_LOCAL_aPATH = ''
 
 
-# 初始化文档树
+# Initialize the document tree
 def INIT_airport_docTree():
     if not os.path.exists(SYS_LOCAL_fPATH):
         os.mkdir(SYS_LOCAL_fPATH)
 
 
-# 保存数据至本地
+# Save data to local
 def out_flow(dataFlow, reFP=''):
     global SYS_LOCAL_aPATH
     SYS_LOCAL_aPATH = os.path.join(easygui.diropenbox('选择保存地址', TITLE), 'AirportURL.csv')
@@ -328,7 +328,7 @@ def out_flow(dataFlow, reFP=''):
         easygui.exceptionbox('系统监测到您正在占用核心文件，请解除该文件的资源占用:{}'.format(SYS_LOCAL_aPATH))
 
 
-# 通过前端panel展示数据
+# Display data through front-end panel
 dataList = []
 
 
@@ -440,7 +440,7 @@ class sAirportSpider(object):
                 return show_data()
 
 
-"""###################主菜单######################"""
+"""###################HOME######################"""
 
 rc = RedisClient()
 
@@ -637,5 +637,3 @@ class V2RaycSpider_Master_Panel(object):
             return resp
 
 
-if __name__ == '__main__':
-    print('hello world！')

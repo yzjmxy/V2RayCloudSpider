@@ -61,6 +61,7 @@ def deploy_collection_engine(task_class: str):
     except Exception as e:
         print(get_debug_info('ERR', f'{task_class} spider engine panic', err_info=''.format(e)))
     finally:
+        print('OVER', 'the cache of {} task list({})'.format(task_class, rc_len[f'{task_class}']))
         print('>> {} <<'.format(''.center(50, '=')))
 
 
