@@ -1,5 +1,7 @@
 # 三堡包架构数据管理
+import sys
 
+sys.path.append('/qinse/V2RaycSpider0925')
 from spiderNest.preIntro import *
 from MiddleKey import VMes_IO
 

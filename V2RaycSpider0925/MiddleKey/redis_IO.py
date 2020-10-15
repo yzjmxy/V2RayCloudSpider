@@ -44,10 +44,14 @@ class RedisClient(object):
     def test(self):
         return self.db.ping()
 
+    def __len__(self, key_name):
+        return self.db.llen(name=key_name)
+
     def kill(self):
         self.db.close()
 
 
-
 if __name__ == '__main__':
-    RedisClient().test()
+    # RedisClient().test()
+    a = ['ssr','v2ray']
+    print('sr' in a)
