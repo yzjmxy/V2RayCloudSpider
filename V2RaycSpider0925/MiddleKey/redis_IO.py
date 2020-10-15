@@ -49,3 +49,5 @@ class RedisClient(object):
 
 
 
+if __name__ == '__main__':
+    RedisClient().test()

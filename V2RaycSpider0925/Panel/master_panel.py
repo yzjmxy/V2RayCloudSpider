@@ -445,7 +445,7 @@ class sAirportSpider(object):
 rc = RedisClient()
 
 
-# 所有初始化设置函数请在此编写
+# Please write all initialization functions here
 class PrepareENV(object):
     """环境初始化检测"""
 
@@ -635,3 +635,7 @@ class V2RaycSpider_Master_Panel(object):
             resp = False
         finally:
             return resp
+
+
+if __name__ == '__main__':
+    print('hello world！')
