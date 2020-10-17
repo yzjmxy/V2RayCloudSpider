@@ -312,6 +312,94 @@ def anti_slider(api):
         return False
 
 
+def magic_msg(text: str, text_color, show_style='default', bk_color='default'):
+    """
+    修饰打印信息
+    设置颜色开始 ：\033[显示方式;前景色;背景色m
+    https://www.cnblogs.com/easypython/p/9084426.html
+    :param text: 要装饰的文本
+    :param show_style: 设置显示方式，使用系统默认
+    :param text_color: 颜色模式，前景色，可选参数 见 set_text_color()
+    :param bk_color:
+    :return:字符串
+    """
+
+    def set_show_style():
+        """
+        设置显示方式
+        0                    终端默认设置
+        1                    高亮显示
+        22　　　　　　　　　　　非高亮显示
+        4                    使用下划线
+        24　　　　　　　　　　　去下划线
+        5                    闪烁
+        25　　　　　　　　　　　去闪烁
+        7                    反白显示
+        27　　　　　　　　　　　非反显
+        8                    不可见
+        28　　　　　　　　　　　可见
+        :return:
+        """
+        if show_style == 'default':
+            return '1'
+        else:
+            return '1'
+
+    def set_text_color():
+        """
+        设置字体颜色,也叫前景色
+        前景色         背景色              颜色
+        ---------------------------------------
+        30                40              黑色
+        31                41              红色
+        32                42              绿色
+        33                43              黃色
+        34                44              蓝色
+        35                45              洋红
+        36                46              青色
+        37                47              白色
+        :return:
+        """
+        if text_color == 'bk' or text_color == 'black':
+            return '30'
+        elif text_color == 'r' or text_color == 'red':
+            return '31'
+        elif text_color == 'g' or text_color == 'green':
+            return '32'
+        elif text_color == 'y' or text_color == 'yellow':
+            return '33'
+        elif text_color == 'bl' or text_color == 'blue':
+            return '34'
+        elif text_color == 'm' or text_color == 'magenta':
+            return '35'
+        elif text_color == 'c' or text_color == 'cyan ':
+            return '36'
+        elif text_color == 'w' or text_color == 'white':
+            return '37'
+        else:
+            # 输入有误时默认返回红色
+            return '31'
+
+    def set_background_color():
+        """
+        设置背景色
+        :return:
+        """
+        if bk_color == 'default':
+            return '1'
+        else:
+            return '1'
+
+    # The foreground
+    #     设置颜色开始 ：\033[显示方式;前景色;背景色m
+    setup_msg = '\033[{};{};{}m'.format(set_show_style(), set_text_color(), set_background_color())
+    release_msg = '\033[0m'
+
+    master_msg = setup_msg + text + release_msg
+
+    return master_msg
+
+
 # 设置Chrome参数
 def set_spiderOption(silence: bool, anti: bool):
     """浏览器初始化"""

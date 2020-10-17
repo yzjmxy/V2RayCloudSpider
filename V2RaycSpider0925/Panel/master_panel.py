@@ -1,5 +1,4 @@
 import csv
-import threading
 import webbrowser
 from datetime import datetime, timedelta
 from MiddleKey.redis_IO import RedisClient
@@ -172,7 +171,7 @@ class SSRcS_panel(object):
         # 启动GUI
         # self.Home()
 
-        self.ssr_attention_link = ''
+        self.subscribe = ''
         self.v2ray_attention_link = ''
 
     @staticmethod
@@ -204,13 +203,13 @@ class SSRcS_panel(object):
         # FIXME:pyinstaller 打包bug；调用修改global value 会使本函数无法被main function transfer
         # FIXME:pyinstaller 打包正确运行情况：
         try:
-            self.ssr_attention_link = rc.get(REDIS_KEY_NAME_BASE.format(mode))
-            if not self.ssr_attention_link:
-                self.ssr_attention_link = service_con(
+            self.subscribe = rc.get(REDIS_KEY_NAME_BASE.format(mode))
+            if not self.subscribe:
+                self.subscribe = service_con(
                     'python3 {}'.format(CLOUD_PATH_BASE.format(verNum, service_con_path)), )
         finally:
-            return self.resTip(self.ssr_attention_link, mode)
-            # easygui.enterbox(msg=v_success, title=TITLE, default=self.ssr_attention_link)
+            return self.resTip(self.subscribe, mode)
+            # easygui.enterbox(msg=v_success, title=TITLE, default=self.subscribe)
 
     @staticmethod
     def resTip(AttentionLink: str, task_name):
@@ -635,5 +634,3 @@ class V2RaycSpider_Master_Panel(object):
             resp = False
         finally:
             return resp
-
-

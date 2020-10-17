@@ -9,3 +9,5 @@ if __name__ == '__main__':
         vmp.debug(e)
     finally:
         vmp.kill()
+
+# TODO: View available subscription links -- redis

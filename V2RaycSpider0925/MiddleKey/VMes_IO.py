@@ -6,15 +6,15 @@ import threading
 path_ = SYS_AIRPORT_INFO_PATH
 
 
-def save_login_info(VMess, class_):
+def save_login_info(VMess, class_, life_cycle=''):
     """
     VMess入库
     class_: ssr or v2ray
     """
 
     # redis loaded
-    # RedisClient().add(key_name=REDIS_KEY_NAME_BASE.format(class_), value_of_link_attr=VMess)
-    threading.Thread(target=RedisClient().add, args=(REDIS_KEY_NAME_BASE.format(class_), VMess)).start()
+    # RedisClient().add(key_name=REDIS_KEY_NAME_BASE.format(class_), subscribe=VMess)
+    threading.Thread(target=RedisClient().add, args=(REDIS_KEY_NAME_BASE.format(class_), VMess, life_cycle)).start()
 
     # static data loaded
     now = str(datetime.now()).split('.')[0]

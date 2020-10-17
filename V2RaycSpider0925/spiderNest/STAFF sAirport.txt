@@ -1,12 +1,8 @@
-https://starscloud.cf/staff,200
-https://catcloud.cc/staff,200
-https://v2.v2pro.me/staff,200
+https://catcloud.cc/staff,200,v2ray
 https://m87is.best/staff,200
 https://n95cloud.live/staff,200
-https://zc17.xyz/staff,200
-https://portal.ibcn.space/staff,200
+
 https://billtsnet.app/staff,200
-http://www.fqfqfq.xyz/staff,200
 https://starscloud.cf/staff
 https://v2.v2pro.me/staff
 https://m87is.best/staff

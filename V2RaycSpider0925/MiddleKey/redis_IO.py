@@ -1,6 +1,9 @@
 import sys
 
 sys.path.append('/qinse/V2RaycSpider0925')
+import random
+from datetime import datetime
+
 import redis
 from config import REDIS_PORT, REDIS_HOST, REDIS_PASSWORD, REDIS_DB, REDIS_KEY_NAME_BASE
 
@@ -8,7 +11,7 @@ REDIS_CLIENT_VERSION = redis.__version__
 IS_REDIS_VERSION_2 = REDIS_CLIENT_VERSION.startswith('2.')
 
 
-class RedisClient(object):
+class RedisClient_v2(object):
     """redis connection client of v2rayc_spider"""
 
     def __init__(self, host=REDIS_HOST, port=REDIS_PORT, password=REDIS_PASSWORD, db=REDIS_DB, **kwargs):
@@ -31,7 +34,7 @@ class RedisClient(object):
             retry += 1
             self.get(key_name, retry)
 
-    def add(self, key_name, value_of_link_attr, link_life_cycle=0):
+    def add(self, key_name, value_of_link_attr, life_cycle=0):
         self.db.lpush(key_name, value_of_link_attr)
 
     def __prepare__(self, ):
@@ -42,7 +45,8 @@ class RedisClient(object):
                 self.db.lpush(REDIS_KEY_NAME_BASE.format(x), '')
 
     def test(self):
-        return self.db.ping()
+        if self.db.ping():
+            return 'V2Ray云彩姬'
 
     def __len__(self, key_name):
         return self.db.llen(name=key_name)
@@ -50,8 +54,82 @@ class RedisClient(object):
     def kill(self):
         self.db.close()
 
+    def get_driver(self) -> redis.StrictRedis:
+        return self.db
+
+
+class RedisClient(object):
+    def __init__(self, host=REDIS_HOST, port=REDIS_PORT, password=REDIS_PASSWORD, db=REDIS_DB, **kwargs):
+        """
+        init redis client
+        :param host: redis host
+        :param port: redis port
+        :param password: redis password
+        """
+        self.db = redis.StrictRedis(host=host, port=port, password=password, decode_responses=True, db=db, **kwargs, )
+        self.subscribe = ''
+
+    def add(self, key_name, subscribe, life_cycle: str):
+        try:
+            self.db.hset(key_name, subscribe, life_cycle)
+        finally:
+            self.kill()
+
+    def get(self, key_name, ) -> str or bool:
+        try:
+            while True:
+                target_raw: dict = self.db.hgetall(key_name)
+                try:
+                    self.subscribe, end_life = random.choice(list(target_raw.items()))
+                    if self.check_stale(end_life):
+                        return self.subscribe
+                    else:
+                        continue
+                except IndexError as e:
+                    return None
+                finally:
+                    self.db.hdel(key_name, self.subscribe)
+        finally:
+            self.kill()
+
+    def refresh(self, deploy=False):
+        import time
+
+        def data_cleaning():
+            class_list = ['v2ray', 'ssr', 'trojan']
+            for class_ in class_list:
+                key_name = REDIS_KEY_NAME_BASE.format(class_)
+                if self.db.hlen(key_name) != 0:
+                    for item, end_life in self.db.hgetall(key_name).items():
+                        if self.check_stale(end_life):
+                            self.db.hdel(key_name, item[0], item[-1])
+
+        if deploy is True:
+            while True:
+                data_cleaning()
+                time.sleep(120)
+
+    @staticmethod
+    def check_stale(item) -> bool:
+        if isinstance(item, str):
+            if datetime.fromisoformat(item) <= datetime.now():
+                return False
+            else:
+                return True
+
+    def __len__(self, key_name) -> int:
+        return self.db.hlen(key_name)
+
+    def kill(self):
+        self.db.close()
+
+    def test(self) -> str:
+        if self.db.ping():
+            return '欢迎使用v2ray云彩姬'
+
+    def get_driver(self) -> redis.StrictRedis:
+        return self.db
+
 
 if __name__ == '__main__':
-    # RedisClient().test()
-    a = ['ssr','v2ray']
-    print('sr' in a)
+    pass

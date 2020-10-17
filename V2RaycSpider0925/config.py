@@ -34,7 +34,6 @@ SERVER_LOG_PATH = ROOT_DATABASE + '/log_information.csv'
 # ---------------------------------------------------
 # Cloud server configuration(SSH)
 # ---------------------------------------------------
-ECS_HOSTNAME: str = ''
 ECS_HOSTNAME: str = '107.182.21.117'
 ECS_PORT: int = 27203
 ECS_USERNAME: str = 'root'

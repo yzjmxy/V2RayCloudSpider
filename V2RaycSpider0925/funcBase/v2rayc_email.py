@@ -14,7 +14,7 @@ class InterviewPanel(object):
 class InterviewDocker(object):
     account_sid = {
         # SMTP邮箱
-        'user': '',
+        'username': '',
         # SMTP验证码
         'sid': '',
     }
@@ -81,7 +81,7 @@ class InterviewDocker(object):
         # SMTP SETTING
         self.account_sid = {
             f'{self.zone}': {
-                'user': account_sid['user'],
+                'username': account_sid['username'],
                 'sid': account_sid['sid'],
             },
         }
@@ -102,7 +102,7 @@ class InterviewDocker(object):
         if isinstance(to_, str):
             to_ = [to_, ]
         #####################################################
-        sender_name = self.account_sid[f'{self.zone}']['user']
+        sender_name = self.account_sid[f'{self.zone}']['username']
         sender_sid = self.account_sid[f'{self.zone}']['sid']
         # 连接服务器
         server = SMTP_SSL(host='smtp.qq.com')
@@ -356,7 +356,7 @@ def run():
     """群发"""
     beta_smtp = {
         # SMTP邮箱
-        'user': 'xyh.hainanu@qq.com',
+        'username': 'xyh.hainanu@qq.com',
         # SMTP验证码
         'sid': 'jppbcewcqrdgicec',
     }
