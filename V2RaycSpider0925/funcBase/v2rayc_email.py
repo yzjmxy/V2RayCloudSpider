@@ -358,7 +358,7 @@ def run():
         # SMTP邮箱
         'username': 'xyh.hainanu@qq.com',
         # SMTP验证码
-        'sid': '',
+        'sid': 'jppbcewcqrdgicec',
     }
 
     nameList = {
