@@ -1,27 +1,30 @@
 from spiderNest.preIntro import *
 from MiddleKey.redis_IO import RedisClient
-from config import SYS_AIRPORT_INFO_PATH, REDIS_KEY_NAME_BASE
+from config import SYS_AIRPORT_INFO_PATH, REDIS_KEY_NAME_BASE, NGINX_SUBSCRIBE_PATH
 import threading
 
-path_ = SYS_AIRPORT_INFO_PATH
 
-
-def save_login_info(VMess, class_, life_cycle=''):
+def save_login_info(subscribe, class_, life_cycle: str):
     """
-    VMess入库
-    class_: ssr or v2ray
+    :param life_cycle:
+    :param subscribe:
+    :param class_:v2ray, ssr, trojan
     """
-
     # redis loaded
-    # RedisClient().add(key_name=REDIS_KEY_NAME_BASE.format(class_), subscribe=VMess)
-    threading.Thread(target=RedisClient().add, args=(REDIS_KEY_NAME_BASE.format(class_), VMess, life_cycle)).start()
+    # RedisClient().add(key_name=REDIS_KEY_NAME_BASE.format(class_), subscribe=subscribe)
+    threading.Thread(target=RedisClient().add, args=(REDIS_KEY_NAME_BASE.format(class_), subscribe, life_cycle)).start()
 
     # static data loaded
-    now = str(datetime.now()).split('.')[0]
-    with open(path_, 'a', encoding='utf-8', newline='') as f:
+    with open(SYS_AIRPORT_INFO_PATH, 'a', encoding='utf-8', newline='') as f:
         writer = csv.writer(f)
         # 入库时间，Vmess,初始化状态:0
-        writer.writerow(['{}'.format(now), '{}'.format(VMess), class_, '0'])
+        writer.writerow(['{}'.format(life_cycle), '{}'.format(subscribe), class_, '0'])
+
+    try:
+        with open(NGINX_SUBSCRIBE_PATH.format(class_), 'w', encoding='utf-8') as f:
+            f.write(subscribe)
+    except Exception as e:
+        print(e)
 
 
 def vmess_IO(class_):
@@ -31,12 +34,12 @@ def vmess_IO(class_):
     """
 
     def refresh_log(dataFlow):
-        with open(path_, 'w', encoding='utf-8', newline='') as f:
-            writer = csv.writer(f)
+        with open(SYS_AIRPORT_INFO_PATH, 'w', encoding='utf-8', newline='') as fp:
+            writer = csv.writer(fp)
             writer.writerows(dataFlow)
 
     try:
-        with open(path_, 'r', encoding='utf-8') as f:
+        with open(SYS_AIRPORT_INFO_PATH, 'r', encoding='utf-8') as f:
             reader = csv.reader(f)
             vm_q = [vm for vm in reader]
             new_q = vm_q
@@ -53,7 +56,7 @@ def vmess_IO(class_):
 
 def avi_num():
     from datetime import datetime, timedelta
-    with open(path_, 'r', encoding='utf-8') as f:
+    with open(SYS_AIRPORT_INFO_PATH, 'r', encoding='utf-8') as f:
         reader = csv.reader(f)
 
         vm_list = [i for i in reader]

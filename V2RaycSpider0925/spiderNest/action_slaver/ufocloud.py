@@ -1,6 +1,3 @@
-import sys
-
-sys.path.append('/qinse/V2RaycSpider0925')
 from spiderNest.action_base import *
 
 

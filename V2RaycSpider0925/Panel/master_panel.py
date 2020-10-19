@@ -1,7 +1,9 @@
 import csv
+import logging
 import webbrowser
 from datetime import datetime, timedelta
 from MiddleKey.redis_IO import RedisClient
+from spiderNest.defender import Defender
 from config import *
 
 try:
@@ -64,7 +66,7 @@ def INIT_process_docTree():
     try:
         if not SYS_LOCAL_vPATH.split('/')[-1] in os.listdir(SYS_LOCAL_fPATH):
             with open(SYS_LOCAL_vPATH, 'w', encoding='utf-8', newline='') as f:
-                f.writelines(['Time', ',', 'AttentionLink', ',', '类型', '\n'])
+                f.writelines(['Time', ',', 'subscribe', ',', '类型', '\n'])
     except FileExistsError:
         pass
 
@@ -174,22 +176,25 @@ class SSRcS_panel(object):
         self.subscribe = ''
         self.v2ray_attention_link = ''
 
-    @staticmethod
-    def find_aviLink():
+    def find_aviLink(self):
         """
         查询池状态
         :return:
         """
 
         # 获取服务器响应
-        avi_info = service_con('python3 {}'.format(CLOUD_PATH_AviLINK))
+        # avi_info = service_con('python3 {}'.format(CLOUD_PATH_AviLINK))
+        avi_info = Defender.search(rc.get_driver())
 
-        # 弹出提示
-        if avi_info != '\n':
-            easygui.choicebox(msg='注:如表所示审核日期为北京时间', title=TITLE, choices=avi_info.split('\n'), )
-        else:
-            easygui.exceptionbox(msg='无可用订阅链接!', title=TITLE)
-
+        avi_info = [''.center(2, ' ').join(['过期时间', '订阅类型', '订阅链接']), ] + avi_info
+        usr_choice = easygui.choicebox(msg='注:审核标准为北京时区；点击获取，链接自动复制', title=TITLE, choices=avi_info, preselect=1)
+        if 'http' in usr_choice:
+            task_name, subscribe = usr_choice.split('  ')[1], usr_choice.split('  ')[-1]
+            self.resTip(subscribe, task_name)
+            rc.get_driver().hdel(REDIS_KEY_NAME_BASE.format(task_name), subscribe)
+        elif '过期时间' in usr_choice:
+            easygui.msgbox('请选择有效链接', TITLE)
+            self.find_aviLink()
         # 返回上一页
         return True
 
@@ -212,27 +217,27 @@ class SSRcS_panel(object):
             # easygui.enterbox(msg=v_success, title=TITLE, default=self.subscribe)
 
     @staticmethod
-    def resTip(AttentionLink: str, task_name):
+    def resTip(subscribe: str, task_name):
         """
 
-        :param task_name: 任务类型：ssr ； v2ray
-        :param AttentionLink: 订阅链接
+        :param task_name: 任务类型：ssr ； v2ray;trojan
+        :param subscribe: 订阅链接
         :return:
         """
         # 公示分发结果
-        if AttentionLink.strip() != '':
-            easygui.enterbox(msg=v_success, title=TITLE, default=AttentionLink)
+        if subscribe.strip():
+            easygui.enterbox(msg=v_success, title=TITLE, default=subscribe)
         try:
             # 获取成功
-            if 'http' in AttentionLink:
+            if 'http' in subscribe:
                 # 自动复制
-                pyperclip.copy(AttentionLink)
+                pyperclip.copy(subscribe)
                 # 将数据存入本地文件
-                save_flow(AttentionLink, task_name)
+                save_flow(subscribe, task_name)
             # 获取异常
             else:
                 easygui.exceptionbox(
-                    msg=v_msg + '\n服务器维护中，请稍后再试;\n请勿频繁请求，您的操作权限可能已被冻结',
+                    msg=v_msg + '\n请将V2Ray云彩姬更新至最新版本!\n作者官网： https://github.com/QIN2DIM/V2RayCloudSpider',
                     title=TITLE
                 )
 
@@ -440,6 +445,13 @@ class sAirportSpider(object):
 
 
 """###################HOME######################"""
+logging.basicConfig(
+    filename=SYS_LOG_PATH,
+    filemode='a',
+    format="%(asctime)s %(name)s:%(levelname)s:%(message)s",
+    datefmt="%d-%M-%Y %H:%M:%S",
+    level=logging.DEBUG
+)
 
 rc = RedisClient()
 
@@ -553,10 +565,7 @@ class V2RaycSpider_Master_Panel(object):
 
     @staticmethod
     def debug(info):
-        try:
-            easygui.exceptionbox(info, TITLE)
-        except Exception as e:
-            print(e)
+        logging.exception(info)
 
     def home_menu(self):
         """主菜单"""

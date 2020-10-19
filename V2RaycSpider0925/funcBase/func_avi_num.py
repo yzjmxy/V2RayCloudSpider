@@ -1,7 +1,4 @@
 # windows10 下不可用
-import sys
-sys.path.append('/qinse/V2RaycSpider0925')
-
 from MiddleKey.VMes_IO import avi_num
 
 if __name__ == '__main__':

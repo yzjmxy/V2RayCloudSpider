@@ -4,6 +4,7 @@ from gevent import monkey
 monkey.patch_all()
 
 import gevent
+from bs4 import BeautifulSoup
 from gevent.queue import Queue
 from spiderNest.preIntro import *
 
@@ -25,19 +26,17 @@ class sAirportSpider(object):
         return self.slaver(self.airHome + '/free-airport.html', 'url')
 
     def get_all_link(self):
-        return self.slaver(self.airHome + '/airport.html', 'url')
+        return self.data_cleaning(self.slaver(self.airHome + '/airport.html', 'url'))
 
     @staticmethod
-    def get_sAirHome(mode):
-        raw_linkList = [i for i in mode if "#" not in i]
-        sAirport_HomeList = []
-        for i in raw_linkList:
-            if 'register' in i:
-                home_link = i[:-13]
-                sAirport_HomeList.append(home_link)
-            else:
-                sAirport_HomeList.append(i)
-        return sAirport_HomeList
+    def data_cleaning(data):
+
+        from urllib.parse import urlparse
+        if isinstance(data, str):
+            data = [data, ]
+
+        if isinstance(data, list):
+            return ['{}://{}'.format(urlparse(href).scheme, urlparse(href).netloc) for href in data if "http" in href]
 
     @staticmethod
     def slaver(url, mode=''):
@@ -125,8 +124,11 @@ class sAirportSpider(object):
                 return hrefs
 
 
-def Out_flow(dataFlow):
+def Out_flow(dataFlow='', init=False):
     path_ = os.path.dirname(__file__) + '/STAFF sAirport.txt'
+    if init:
+        with open(path_, 'w', encoding='utf-8') as f:
+            pass
     with open(path_, 'a', encoding='utf-8') as f:
         f.write(dataFlow)
 
@@ -138,31 +140,24 @@ def verity_staff():
     """
     while not target_Q.empty():
         target = target_Q.get_nowait()
-        if target[-1] != '/':
-            target += '/staff'
-        else:
-            target += 'staff'
 
-        # 审查网络状况
-        def layer():
-            try:
-                headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) '
-                                         'AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.105 Safari/537.36'}
-                res = requests.get(target, headers=headers)
-                res.raise_for_status()
-                return res
-            except Exception as e:
-                print(e)
-                # print(['x', '{}'.format(target.split('staff')[0])])
-                return False
+        try:
+            headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) '
+                                     'AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.105 Safari/537.36'}
+            res = requests.get(target, headers=headers, timeout=5)
 
-        if layer() is not False:
-            code = layer().status_code
-            try:
-                Out_flow('{}\n'.format(target))
-            finally:
-                response_Q.put_nowait([target, code])
-                print(['{}'.format(response_Q.qsize()), target, code])
+            code = res.status_code
+
+            if code == 200:
+                Out_flow('{}\t{}\n'.format(target, code))
+
+            response_Q.put_nowait([target, code])
+
+            print(['{}'.format(response_Q.qsize()), target, code])
+
+        except RequestException:
+            pass
+            # print(['x', '{}'.format(target.split('staff')[0])])
 
 
 def quick_start(TIP):
@@ -176,12 +171,14 @@ def quick_start(TIP):
     gevent.joinall(task_list)
 
 
-if __name__ == '__main__':
+def run():
+    """STAFF sAirport.txt 中导出结果，机场质量较差，v4.3.X+版本已弃用该模块。机场由人工评测筛选后录入"""
+    Out_flow(init=True)
 
     sas = sAirportSpider()
+    links = sas.get_all_link()
+    quick_start(links)
 
-    quick_start(
-        sas.get_sAirHome(
-            sas.get_free_link()
-        )
-    )
+
+if __name__ == '__main__':
+    run()

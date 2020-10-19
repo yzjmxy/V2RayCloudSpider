@@ -8,7 +8,7 @@ from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.common.by import By
 import selenium.webdriver.support.expected_conditions as EC
-from config import CHROMEDRIVER_PATH
+from config import CHROMEDRIVER_PATH, TIME_ZONE_CN
 from MiddleKey.VMes_IO import save_login_info
 
 
@@ -49,8 +49,8 @@ class BaseAction(object):
         return username, password, email
 
     @staticmethod
-    def generate_life_cycle(life_cycle: int):
-        return str(datetime.now() + timedelta(days=life_cycle)).split('.')[0]
+    def generate_life_cycle(life_cycle: int) -> str:
+        return str(datetime.now(TIME_ZONE_CN) + timedelta(days=life_cycle)).split('.')[0]
 
     def set_spiderOption(self, ):
         """浏览器初始化"""
@@ -65,6 +65,13 @@ class BaseAction(object):
 
         # 无缓存加载
         options.add_argument('--disk-cache-')
+
+        # 设置中文
+        options.add_argument('lang=zh_CN.UTF-8')
+
+        # 更换头部
+        options.add_argument(
+            'user-agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.80 Safari/537.36 Edg/86.0.622.43"')
 
         # 静默启动
         if self.silence is True:
@@ -101,9 +108,12 @@ class BaseAction(object):
 
     @staticmethod
     def wait(api: Chrome, timeout: float, tag_xpath_str):
-        WebDriverWait(api, timeout).until(EC.presence_of_element_located((
-            By.XPATH, tag_xpath_str
-        )))
+        if tag_xpath_str == 'all':
+            WebDriverWait(api, timeout).until(EC.presence_of_all_elements_located)
+        else:
+            WebDriverWait(api, timeout).until(EC.presence_of_element_located((
+                By.XPATH, tag_xpath_str
+            )))
 
     def check_in(self, button_xpath_str: str):
         """daily check in ,add available flow"""

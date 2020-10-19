@@ -27,30 +27,9 @@ except ModuleNotFoundError:
     pass
 
 
-# 获取临时账号
-class FakeAccount(object):
-    def __int__(self):
-        pass
-
-    @staticmethod
-    def __create__():
-        # 账号信息
-        username = ''.join([random.choice(printable[:printable.index('!')]) for i in range(9)])
-        password = ''.join([random.choice(printable[:printable.index(' ')]) for j in range(15)])
-        email = username + '@qq.com'
-
-        return username, password, email
-
-    # 获取账号调用此函数
-    def get_fake_account(self):
-        return self.__create__()
-
-    @staticmethod
-    def air_target(class_):
-        path_ = os.path.dirname(os.path.dirname(__file__)) + '/dataBase/{}机场.txt'.format(class_)
-        with open(path_, 'r', encoding='utf-8') as f:
-            return f.read().split('\n')
-
+# ------------------------------------
+# v4.3.X版本配件
+# ------------------------------------
 
 # 滑动验证模组
 class SliderMechanism(object):
@@ -297,7 +276,7 @@ class SliderMechanism(object):
         return True
 
 
-# 反爬虫组建
+# 反爬虫组件
 def anti_slider(api):
     """
     :api: 传入driver驱动
@@ -312,6 +291,7 @@ def anti_slider(api):
         return False
 
 
+# 文本修饰器
 def magic_msg(text: str, text_color, show_style='default', bk_color='default'):
     """
     修饰打印信息
@@ -400,47 +380,20 @@ def magic_msg(text: str, text_color, show_style='default', bk_color='default'):
     return master_msg
 
 
-# 设置Chrome参数
-def set_spiderOption(silence: bool, anti: bool):
-    """浏览器初始化"""
-    options = ChromeOptions()
+# 获取FAKE USERAGENT
+def get_header() -> str:
+    from fake_useragent import UserAgent
+    headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) '
+                             'AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.105 Safari/537.36'}
 
-    # 最高权限运行
-    options.add_argument('--no-sandbox')
+    return headers['User-Agent']
+    # fixme: v4.2.1error
+    # return UserAgent().random
 
-    # 隐身模式
-    options.add_argument('-incognito')
 
-    # 无缓存加载
-    options.add_argument('--disk-cache-')
-
-    # 静默启动
-    if silence is True:
-        options.add_argument('--headless')
-
-    """自定义选项"""
-
-    # 无反爬虫机制：高性能启动，禁止图片加载及js动画渲染，加快selenium页面切换效率
-    def NonAnti():
-        chrome_prefs = {"profile.default_content_settings": {"images": 2, 'javascript': 2},
-                        "profile.managed_default_content_settings": {"images": 2}}
-        options.experimental_options['prefs'] = chrome_prefs
-        options.add_experimental_option('excludeSwitches', ['enable-automation'])
-        d_c = DesiredCapabilities.CHROME
-        d_c['pageLoadStrategy'] = 'none'
-
-        return webdriver.Chrome(
-            options=options,
-            executable_path=CHROMEDRIVER_PATH,
-            desired_capabilities=d_c
-        )
-
-    if anti is False:
-        return NonAnti()
-    else:
-        # 有反爬虫/默认：一般模式启动
-        return webdriver.Chrome(options=options, executable_path=CHROMEDRIVER_PATH)
-
+# ------------------------------------
+# v4.3.X版本弃用
+# ------------------------------------
 
 # 获取STAFF机场关键信息：可用时长、可用流量
 def get_STAFF_info(api):
@@ -464,11 +417,6 @@ def get_STAFF_info(api):
 
     except NoSuchElementException:
         return '找不到元素,或本机场未基于STAFF开发前端'
-
-
-# 登录
-def login_STAFF(api, method: str) -> bool:
-    pass
 
 
 # 注册
@@ -501,14 +449,3 @@ def TOS_STAFF(api, timeout: float):
         ))).click()
     except NoSuchElementException:
         pass
-
-
-# 获取FAKE USERAGENT
-def get_header() -> str:
-    from fake_useragent import UserAgent
-    headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) '
-                             'AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.105 Safari/537.36'}
-
-    return headers['User-Agent']
-    # fixme: v4.2.1error
-    # return UserAgent().random

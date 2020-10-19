@@ -29,3 +29,4 @@ Time,AttentionLink,类型
 2020-10-13 20:36:24,https://subscribepro.cc/link/QINSBeTZ5TfdCLMY?sub=3,v2ray
 2020-10-18 04:14:59,https://sub.hanhaha.xyz/link/cRUFd5xM1iQ7X5SJ?sub=3,v2ray
 2020-10-18 04:15:31,https://subhaha.xyz/link/mHNd1V6LmukXov92?sub=1&extend=1,ssr
+2020-10-20 04:15:47,https://subss.xjycloud.xyz/link/EDtOSMAoWYwzSP7i?sub=1,ssr

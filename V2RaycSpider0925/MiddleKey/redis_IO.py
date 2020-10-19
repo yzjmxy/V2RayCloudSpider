@@ -1,11 +1,9 @@
-import sys
-
-sys.path.append('/qinse/V2RaycSpider0925')
 import random
+import time
 from datetime import datetime
 
 import redis
-from config import REDIS_PORT, REDIS_HOST, REDIS_PASSWORD, REDIS_DB, REDIS_KEY_NAME_BASE
+from config import REDIS_PORT, REDIS_HOST, REDIS_PASSWORD, REDIS_DB, REDIS_KEY_NAME_BASE, TIME_ZONE_CN, TIME_ZONE_NY
 
 REDIS_CLIENT_VERSION = redis.__version__
 IS_REDIS_VERSION_2 = REDIS_CLIENT_VERSION.startswith('2.')
@@ -93,7 +91,6 @@ class RedisClient(object):
             self.kill()
 
     def refresh(self, deploy=False):
-        import time
 
         def data_cleaning():
             class_list = ['v2ray', 'ssr', 'trojan']
@@ -101,20 +98,26 @@ class RedisClient(object):
                 key_name = REDIS_KEY_NAME_BASE.format(class_)
                 if self.db.hlen(key_name) != 0:
                     for item, end_life in self.db.hgetall(key_name).items():
-                        if self.check_stale(end_life):
-                            self.db.hdel(key_name, item[0], item[-1])
-
-        if deploy is True:
-            while True:
+                        if self.check_stale(end_life, class_):
+                            print(f'del-({class_})--{item}')
+                            self.db.hdel(key_name, item)
+        if deploy:
+            for x in range(10):
                 data_cleaning()
-                time.sleep(120)
+                time.sleep(60*5)
 
     @staticmethod
-    def check_stale(item) -> bool:
+    def check_stale(item, class_='') -> bool:
         if isinstance(item, str):
-            if datetime.fromisoformat(item) <= datetime.now():
+            # Expiration time of the subscribe
+            check_item = datetime.fromisoformat(item)
+            # Shanghai time now
+            check_now = datetime.fromisoformat(str(datetime.now(TIME_ZONE_CN)).split('.')[0])
+            if check_item >= check_now:
+                # expirate
                 return False
             else:
+                # survive
                 return True
 
     def __len__(self, key_name) -> int:
@@ -132,4 +135,4 @@ class RedisClient(object):
 
 
 if __name__ == '__main__':
-    pass
+    RedisClient().test()

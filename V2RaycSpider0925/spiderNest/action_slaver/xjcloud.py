@@ -1,9 +1,6 @@
-import sys
-
-sys.path.append('/qinse/V2RaycSpider0925')
-from selenium.common.exceptions import NoSuchElementException, TimeoutException
 
 from spiderNest.action_base import *
+from selenium.common.exceptions import NoSuchElementException, TimeoutException
 
 
 class Action_XjCloud(BaseAction):
