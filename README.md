@@ -125,7 +125,7 @@ REDIS_PASSWORD: str = ''
 
 ## :world_map: TODO
 
-- [ ] 支持Trojan-go、Trojan-gfw机场的采集
+- [x] 支持Trojan-go、Trojan-gfw机场的采集
 - [ ] 融合网络代理核心，形成自洽的科学上网模块
 - [ ] 添加{邮件发送模块}，支持开发者账号群发订阅链接
 - [ ] 合并V2ray和SSR的订阅链接消息队列，PC端可查看最新可用的3条链接，并择一获取
