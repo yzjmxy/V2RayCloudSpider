@@ -195,6 +195,7 @@ class SSRcS_panel(object):
         elif '过期时间' in usr_choice:
             easygui.msgbox('请选择有效链接', TITLE)
             self.find_aviLink()
+
         # 返回上一页
         return True
 
@@ -228,6 +229,7 @@ class SSRcS_panel(object):
         if subscribe.strip():
             easygui.enterbox(msg=v_success, title=TITLE, default=subscribe)
         try:
+            print(subscribe)
             # 获取成功
             if 'http' in subscribe:
                 # 自动复制
@@ -240,6 +242,16 @@ class SSRcS_panel(object):
                     msg=v_msg + '\n请将V2Ray云彩姬更新至最新版本!\n作者官网： https://github.com/QIN2DIM/V2RayCloudSpider',
                     title=TITLE
                 )
+                subscribe = requests.get('https://t.qinse.top/subscribe/{}.txt'.format(task_name)).text
+                easygui.enterbox(
+                    msg=f'点击获取{task_name}备用链接',
+                    title=TITLE,
+                    default=subscribe
+                )
+                # 自动复制
+                pyperclip.copy(subscribe)
+                # 将数据存入本地文件
+                save_flow(subscribe, task_name)
 
         finally:
             # 返回上一页
@@ -445,13 +457,6 @@ class sAirportSpider(object):
 
 
 """###################HOME######################"""
-logging.basicConfig(
-    filename=SYS_LOG_PATH,
-    filemode='a',
-    format="%(asctime)s %(name)s:%(levelname)s:%(message)s",
-    datefmt="%d-%M-%Y %H:%M:%S",
-    level=logging.DEBUG
-)
 
 rc = RedisClient()
 
@@ -510,8 +515,23 @@ class PrepareENV(object):
         except FileNotFoundError:
             pass
 
-    @classmethod
-    def run_start(cls, init=False):
+    @staticmethod
+    def init_logs():
+        if not os.path.exists(SYS_LOCAL_fPATH):
+            os.mkdir(SYS_LOCAL_fPATH)
+
+        if '.log' not in os.listdir(SYS_LOCAL_fPATH):
+            with open(SYS_LOG_PATH, 'w', encoding='utf-8') as f:
+                pass
+        logging.basicConfig(
+            filename=SYS_LOG_PATH,
+            filemode='a',
+            format="%(asctime)s %(name)s:%(levelname)s:%(message)s",
+            datefmt="%d-%M-%Y %H:%M:%S",
+            level=logging.DEBUG
+        )
+
+    def run_start(self, init=False):
         if init is True:
             # 初始化用户账号
             # self.init_fake_user_agent()
@@ -521,6 +541,8 @@ class PrepareENV(object):
 
             # 初始化Python第三方库
             # self.init_requirements()
+
+            self.init_logs()
 
             # 初始化核心文档树
             INIT_process_docTree()
@@ -536,7 +558,7 @@ class V2RaycSpider_Master_Panel(object):
     def __init__(self, init=True):
 
         # 环境初始化
-        status_code = PrepareENV.run_start(init=init)
+        status_code = PrepareENV().run_start(init=init)
 
         # 主菜单
         self.MAIN_HOME_MENU = ['[1]查看机场生态', '[2]获取订阅链接', '[3]打开本地文件', '[4]检查版本更新', '[5]退出', ]
@@ -606,10 +628,8 @@ class V2RaycSpider_Master_Panel(object):
                 resp = sAirportSpider.slaver(self.airHome + '/airport.html', )
             elif '[4]返回' in usr_c:
                 resp = True
-            else:
-                resp = False
         except TypeError:
-            resp = False
+            resp = True
         finally:
             # 返回
             return resp
@@ -640,6 +660,6 @@ class V2RaycSpider_Master_Panel(object):
             else:
                 resp = False
         except TypeError:
-            resp = False
+            resp = True
         finally:
             return resp

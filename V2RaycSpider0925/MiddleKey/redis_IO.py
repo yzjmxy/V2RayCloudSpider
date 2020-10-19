@@ -78,11 +78,11 @@ class RedisClient(object):
             while True:
                 target_raw: dict = self.db.hgetall(key_name)
                 try:
-                    self.subscribe, end_life = random.choice(list(target_raw.items()))
+                    self.subscribe, end_life = list(target_raw.items()).pop()
                     if self.check_stale(end_life):
-                        return self.subscribe
-                    else:
                         continue
+                    else:
+                        return self.subscribe
                 except IndexError as e:
                     return None
                 finally:
@@ -114,10 +114,10 @@ class RedisClient(object):
             # Shanghai time now
             check_now = datetime.fromisoformat(str(datetime.now(TIME_ZONE_CN)).split('.')[0])
             if check_item >= check_now:
-                # expirate
+                # survive
                 return False
             else:
-                # survive
+                # stale
                 return True
 
     def __len__(self, key_name) -> int:

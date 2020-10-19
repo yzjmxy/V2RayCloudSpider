@@ -68,7 +68,7 @@ NGINX_SUBSCRIBE_PATH = os.path.join(NGINX_RES_PATH, '{}.txt')
 """********************************* Action set/PATH->Local ********************************"""
 # TODO: 当前版本不提供安装导航，不支持diy安装目录，若想更改缓存路径(默认当前文件夹)，请改动源代码
 # 工程目录
-ROOT_PROJECT_PATH = os.path.dirname(__file__)
+ROOT_PROJECT_PATH = 'C:\\V2RaySpider' if 'win' in sys.platform else os.path.dirname(__file__)
 # 软件本地根目录
 SYS_LOCAL_fPATH = os.path.join(ROOT_PROJECT_PATH, 'dataBase')
 # 访问记录(系统核心文件，请勿删改)
@@ -78,10 +78,7 @@ SYS_AIRPORT_INFO_PATH = SYS_LOCAL_fPATH + '/log_information.csv'
 SYS_LOG_PATH = SYS_LOCAL_fPATH + '/logs.log'
 # 采集模式，若服务器设置有误 则本机启动
 START_MODE = 'local' if ECS_HOSTNAME == '' else 'cloud'
-# 集群路径
-SPIDER_CLUSTER_PATH = os.path.join(os.path.join(ROOT_PROJECT_PATH, 'spiderNest'), 'action_slaver')
-SPIDER_CLUSTER_TASK = [os.path.join(SPIDER_CLUSTER_PATH, i) for i in os.listdir(SPIDER_CLUSTER_PATH) if
-                       i != '__init__.py']
+
 """********************************* The other set ********************************"""
 
 # 我就是云彩姬!

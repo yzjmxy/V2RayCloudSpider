@@ -13,8 +13,19 @@
 - 【或直接下载软件】（推荐；约17MB）
 
   - **运行脚本**||**开箱即用**
+
   - [云彩姬使用说明](https://github.com/QIN2DIM/V2RayCloudSpider/blob/master/V2Ray云彩姬使用说明.md)
-  
+
+  - 下载方案1【Windows用户+网速困难户推荐】：浏览器直接访问如下链接
+
+    ```
+    	https://t.qinse.top/subscribe/v2ray云彩姬.zip
+    ```
+
+  - 下载方案2【Windows用户推荐】：直接下载压缩包文件或可执行文件
+
+  - 下载方案3【Python用户推荐】：Clone项目，项目源代码都在**V2RaycSpider[版本号]**的文件夹中
+
   ![QQ截图20201013211119](https://i.loli.net/2020/10/13/mV5eizrLD8TFlWO.png)
 
 ![QQ截图20201013211157](https://i.loli.net/2020/10/13/hmKrsQ7Ob6kIBce.png)
@@ -33,53 +44,23 @@ pip install -r requirements.txt -i https://pypi.tuna.tsinghua.edu.cn/simple/
 
 - 修改配置` config.py`
 
-```
-V2RaycSpider0925
- ├── dataBase
- │   ├── AirportURL.csv
- │   ├── fake_useragent_0.1.11.json
- │   ├── log_information.csv
- │   ├── log_VMess.txt
- │   ├── ssr机场.txt
- │   └── v2ray机场.txt
- ├── funcBase
- │   ├── deploy_engine.py
- │   ├── func_avi_num.py
- │   ├── get_ssr_link.py
- │   ├── get_trojan_link.py
- │   ├── get_v2ray_link.py
- │   └── __init__.py
- ├── MiddleKey
- │   ├── chromedriver
- │   ├── chromedriver.exe
- │   ├── redis_IO.py
- │   ├── VMes_IO.py
- │   ├── __init__.py
- │   └── __pycache__
- ├── Panel
- │   ├── master_panel.py
- │   ├── __init__.py
- │   └── __pycache__
- ├── spiderNest
- │   ├── IA_spider.py
- │   ├── preIntro.py
- │   ├── SNIF_dog.py
- │   ├── SSRcS_xjcloud.py
- │   ├── STAFF sAirport.txt
- │   ├── V2Ray_vms.py
- │   ├── __init__.py
- │   └── __pycache__
- ├── config.py
- ├── 1.ico
- ├── main.py
- └── requirements.txt
-```
-
-
-
 ### :balance_scale: Configure project parameters
 
-- 请在此正确填写你的服务器信息，并将整个项目文件`V2RaycSpider0925`上传至linux服务器的`/qinse`文件夹下，没有就新建一个 - -
+- 请在此正确填写你的服务器信息，并将整个项目文件`V2RaycSpider0925`上传至linux服务器的`/qinse`文件夹
+
+- 服务器首次运行请确保已安装`redis`并正确配置（开放）访问权限，且安装项目Python第三方库
+
+- 运行`./funcBase/deploy_engine.py`则可部署脚本
+
+  ```powershell
+  # 预览运行效果;如下为默认路径
+  python3 /qinse/V2RaycSpider0925/funcBase/deploy_engine.py
+  
+  # 部署
+  nohup python3 /qinse/V2RaycSpider0925/funcBase/deploy_engine.py &
+  ```
+
+  
 
 ```python
 # /V2RaycSpider0925/config.py
@@ -102,9 +83,7 @@ REDIS_PORT: int = 6379
 REDIS_PASSWORD: str = ''
 ```
 
-- 若`ECS_HOSTNAME`参数为空(默认为空)，则会启动**本地采集程序**，`local version`会丧失部分功能权限；其他参数大可不必改动- -
-
-- 设置驱动执行权限
+- **设置驱动执行权限**
 
   给`chromedriver`设置可执行权限，如果用`Finalshell`l或`Xshell`的同学，直接右键目标文件即可设置文件权限；项目预装的驱动是最新版本的[2020.10]所以`Linux`中要下载`v85.0.4183.102`或更新版本的Chrome
 
