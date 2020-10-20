@@ -54,7 +54,7 @@
   
   ```python
   # 部署
-nohup python3 /qinse/V2RaycSpider0925/funcBase/deploy_engine.py &
+  nohup python3 /qinse/V2RaycSpider0925/funcBase/deploy_engine.py &
   ```
   
   ```python
