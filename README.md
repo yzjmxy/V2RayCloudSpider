@@ -112,7 +112,7 @@
   google-chrome-stable --no-sandbox --headless --disable-gpu --screenshot https://www.baidu.com/
   ```
 
-- [安装](https://shimo.im/docs/5bqnroJYDbU4rGqy/ 《Linux 配置Python开发环境》，可复制链接后用石墨文档 App 或小程序打开)`redis`
+- [安装](https://shimo.im/docs/5bqnroJYDbU4rGqy/)`redis`
 
 ### :zap:Other
 
