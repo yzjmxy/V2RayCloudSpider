@@ -26,12 +26,14 @@
 > 该脚本未在macOS测试运行，可能存在非常多的bug，欢迎感兴趣的小伙伴来跑一下程序- -
 
 - `/V2RaySpider0925`中存放该项目通用版本的源代码
+
 - 运行`main.py`启动程序
+
 - 安装依赖`当前目录：/V2RaycSpider0925`
 
-```powershell
-pip install -r requirements.txt -i https://pypi.tuna.tsinghua.edu.cn/simple/
-```
+  ```
+  pip install -r requirements.txt -i https://pypi.tuna.tsinghua.edu.cn/simple/
+  ```
 
 - 修改配置` config.py`
 
@@ -48,33 +50,33 @@ pip install -r requirements.txt -i https://pypi.tuna.tsinghua.edu.cn/simple/
   ```powershell
   # 预览运行效果;如下为默认路径
   python3 /qinse/V2RaycSpider0925/funcBase/deploy_engine.py
-  
-  # 部署
-  nohup python3 /qinse/V2RaycSpider0925/funcBase/deploy_engine.py &
   ```
-
   
-
-```python
-# /V2RaycSpider0925/config.py
-# SYS_PATH = f'/qinse/V2RaycSpider{verNum}'
-
-# ---------------------------------------
-# Cloud server configuration(SSH)
-# ---------------------------------------
-ECS_HOSTNAME: str = 'your ip'
-ECS_PORT: int = 29710
-ECS_USERNAME: str = ''
-ECS_PASSWORD: str = ''
-    
-# ---------------------------------------
-# Redis server configuration(SSH)
-# ---------------------------------------
-
-REDIS_HOST: str = 'your ip'
-REDIS_PORT: int = 6379
-REDIS_PASSWORD: str = ''
-```
+  ```python
+  # 部署
+nohup python3 /qinse/V2RaycSpider0925/funcBase/deploy_engine.py &
+  ```
+  
+  ```python
+  # /V2RaycSpider0925/config.py
+  # SYS_PATH = f'/qinse/V2RaycSpider{verNum}'
+  
+  # ---------------------------------------
+  # Cloud server configuration(SSH)
+  # ---------------------------------------
+  ECS_HOSTNAME: str = 'your ip'
+  ECS_PORT: int = 29710
+  ECS_USERNAME: str = ''
+  ECS_PASSWORD: str = ''
+      
+  # ---------------------------------------
+  # Redis server configuration(SSH)
+  # ---------------------------------------
+  
+  REDIS_HOST: str = 'your ip'
+  REDIS_PORT: int = 6379
+  REDIS_PASSWORD: str = ''
+  ```
 
 - **设置驱动执行权限**
 
@@ -84,9 +86,13 @@ REDIS_PASSWORD: str = ''
   CHROMEDRIVER_PATH = os.path.dirname(__file__) + '/MiddleKey/chromedriver'
   ```
 
-### :zap:Other
+- 安装`gcc`
 
-- `Linux`安装Chrome
+  ```
+  yum install gcc-c++
+  ```
+
+- `Linux`**安装Chrome**
 
   - 指定yum源
 
@@ -106,7 +112,32 @@ REDIS_PASSWORD: str = ''
   google-chrome-stable --no-sandbox --headless --disable-gpu --screenshot https://www.baidu.com/
   ```
 
-## :grey_question: Q&A
+- [安装](https://shimo.im/docs/5bqnroJYDbU4rGqy/ 《Linux 配置Python开发环境》，可复制链接后用石墨文档 App 或小程序打开)`redis`
+
+### :zap:Other
+
+- 快速获取
+
+  - 使用requests的get请求，分别访问以下链接，使用text抽取订阅链接
+
+    ```python
+    # Python3.8
+    # quick——get Subscribe API
+    import requests
+    
+    subs_target = 'https://t.qinse.top/subscribe/{}.txt'
+    
+    subs_ssr = requests.get(subs_target.format('ssr')).text
+    subs_trojan = requests.get(subs_target.format('trojan')).text
+    subs_v2ray = requests.get(subs_target.format('v2ray')).text
+    
+    print("subs_ssr: {}\nsubs_: {}\nsubs_v2ray: {}\n".format(subs_ssr,subs_trojan,subs_v2ray))
+    
+    ```
+
+    ![image-20201020112752998](https://i.loli.net/2020/10/20/XaJc4qA1ehPUM5V.png)
+
+##  :grey_question:Q&A
 
 - **防火墙警告**
 
