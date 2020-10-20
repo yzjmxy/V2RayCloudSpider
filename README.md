@@ -10,25 +10,16 @@
 
 - 【下载整个项目】下载项目并解压（约36.6MB）![QQ截图20201013211025](https://i.loli.net/2020/10/13/yeBcA3dXwU8FOS4.png)
 
-- 【或直接下载软件】（推荐；约17MB）
-
-  - **运行脚本**||**开箱即用**
+- 【或直接下载软件】**运行脚本**||**开箱即用**（推荐；约17MB）
 
   - [云彩姬使用说明](https://github.com/QIN2DIM/V2RayCloudSpider/blob/master/V2Ray云彩姬使用说明.md)
 
-  - 下载方案1【Windows用户+网速困难户推荐】：浏览器直接访问如下链接
+  - 下载方案1【Windows用户 or 网速困难户推荐】：浏览器直接[下载软件](https://t.qinse.top/subscribe/v2ray云彩姬.zip)	
 
-    ```
-    	https://t.qinse.top/subscribe/v2ray云彩姬.zip
-    ```
+  - 下载方案2【Windows用户推荐】：直接下载压缩包文件或可执行文件![Snipaste_2020-10-20_11-04-18](https://i.loli.net/2020/10/20/WwrOToUH7yuKtgM.png)
 
-  - 下载方案2【Windows用户推荐】：直接下载压缩包文件或可执行文件
+  - 下载方案3【Python用户推荐】：Clone项目，项目源代码都在**V2RaycSpider[版本号]**的文件夹中![QQ截图20201020110338](https://i.loli.net/2020/10/20/jaw9JlmuFReWtH8.png)
 
-  - 下载方案3【Python用户推荐】：Clone项目，项目源代码都在**V2RaycSpider[版本号]**的文件夹中
-
-  ![QQ截图20201013211119](https://i.loli.net/2020/10/13/mV5eizrLD8TFlWO.png)
-
-![QQ截图20201013211157](https://i.loli.net/2020/10/13/hmKrsQ7Ob6kIBce.png)
 
 ## :video_game: Advanced Gameplay
 
@@ -50,7 +41,9 @@ pip install -r requirements.txt -i https://pypi.tuna.tsinghua.edu.cn/simple/
 
 - 服务器首次运行请确保已安装`redis`并正确配置（开放）访问权限，且安装项目Python第三方库
 
-- 运行`./funcBase/deploy_engine.py`则可部署脚本
+- 运行`./funcBase/deploy_engine.py`则可部署脚本。
+
+- **一定确保宁的环境部署在非大陆VPS上否则大概率翻车**
 
   ```powershell
   # 预览运行效果;如下为默认路径
@@ -128,8 +121,8 @@ REDIS_PASSWORD: str = ''
 - [x] 支持Trojan-go、Trojan-gfw机场的采集
 - [ ] 融合网络代理核心，形成自洽的科学上网模块
 - [ ] 添加{邮件发送模块}，支持开发者账号群发订阅链接
-- [ ] 合并V2ray和SSR的订阅链接消息队列，PC端可查看最新可用的3条链接，并择一获取
+- [x] 合并订阅链接消息队列，PC端可查看目前在库最多25条Subscribe订阅链接，并择一获取
   - [x] 合并队列
   - [x] 查看链接
-  - [ ] 择一获取
+  - [x] 择一获取
 - [ ] 逐渐停用easyGUI前端模块，移植web操作平台，兼容跨平台访问(手机，电脑，嵌入式系统)
