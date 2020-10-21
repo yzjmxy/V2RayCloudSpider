@@ -49,30 +49,22 @@ rc_len = {
 }
 
 
-def do_spider_cluster(deployment_environment: str, task_name: str):
+def do_spider_cluster(task_name: str):
     if isinstance(task_name, str):
-        if 'linux' in deployment_environment:
-            if task_name == 'ssr':
-                xjcloud.Action_XjCloud().run()
-            elif task_name == 'v2ray':
-                thessr.Action_TheSSR().run()
-                ufocloud.Action_UfoCloud().run()
-            elif task_name == 'trojan':
-                jisumax.Action_JiSuMax().run()
-            else:
-                logging.warning('the task name of cluster\'s task name is error({})'.format(task_name))
-        else:
+        if task_name == 'ssr':
+            xjcloud.Action_XjCloud().run()
+        elif task_name == 'v2ray':
+            thessr.Action_TheSSR().run()
+            ufocloud.Action_UfoCloud().run()
+        elif task_name == 'trojan':
             jisumax.Action_JiSuMax().run()
-            print(
-                get_debug_info('WARNING',
-                               'Please deploy in linux environment.Not in ({})'.format(deployment_environment)))
-            logging.warning('Deploy the system in this environment({})'.format(deployment_environment))
-            # exit()
+        else:
+            logging.warning('the task name of cluster\'s task name is error({})'.format(task_name))
     else:
         logging.warning('the task name of cluster\'s task name is error({})'.format(task_name))
 
 
-def deploy_collection_engine(task_name: str, cap: int = 20):
+def deploy_collection_engine(task_name: str, cap: int = 40):
     """
     :param task_name: v2ray,ssr,trojan
     :param cap:
@@ -94,7 +86,7 @@ def deploy_collection_engine(task_name: str, cap: int = 20):
     try:
         print(get_debug_info('TEST', f'Test cache of the v2rayc-spider ({task_name}) redis task list'))
         if rc_len[f'{task_name}'] >= cap:
-            print(get_debug_info(f'SLEEP', f'Cache is full ({cap})'))
+            print(get_debug_info(f'SLEEP', f'the Cache of ({task_name}) is full ({cap})'))
             return None
     finally:
         print('>> {} <<'.format(''.center(50, '=')))
@@ -102,7 +94,7 @@ def deploy_collection_engine(task_name: str, cap: int = 20):
     # main collect process
     try:
         print(get_debug_info('RUN', f'({task_name}) spider engine'))
-        do_spider_cluster(sys.platform, task_name)
+        do_spider_cluster(task_name)
 
         if rc.__len__(REDIS_KEY_NAME_BASE.format(f'{task_name}')) > rc_len[f'{task_name}']:
             print(get_debug_info('NICE', f'Collect Success({task_name})'))
@@ -143,13 +135,19 @@ class VSD(object):
 
 if __name__ == '__main__':
 
-    try:
-        schedule.every(3).minutes.do(deploy_collection_engine, 'ssr')
-        schedule.every(1).minute.do(deploy_collection_engine, 'v2ray')
-        schedule.every(5).minutes.do(deploy_collection_engine, 'trojan')
-        schedule.every(12).hours.do(rc.refresh, True)
+    if 'linux' not in sys.platform:
+        print(
+            get_debug_info('WARNING',
+                           'Please deploy in linux environment.Not in ({})'.format(sys.platform)))
+        logging.warning('Deploy the system in this environment({})'.format(sys.platform))
 
-        ThreadPoolExecutor(max_workers=4).map(deploy_collection_engine, ['ssr', 'v2ray', 'trojan'])
+    try:
+        schedule.every(30).minutes.do(deploy_collection_engine, 'ssr')
+        schedule.every(45).minutes.do(deploy_collection_engine, 'v2ray')
+        # schedule.every(15).minutes.do(deploy_collection_engine, 'trojan')
+        schedule.every(12).minutes.do(rc.refresh, True)
+
+        ThreadPoolExecutor(max_workers=2).map(deploy_collection_engine, ['ssr', 'v2ray'])
 
         while True:
             schedule.run_pending()

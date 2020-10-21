@@ -4,6 +4,7 @@ import webbrowser
 from datetime import datetime, timedelta
 from MiddleKey.redis_IO import RedisClient
 from spiderNest.defender import Defender
+from concurrent.futures import ThreadPoolExecutor
 from config import *
 
 try:
@@ -54,9 +55,6 @@ hotOpt = 0
 # V2RAY预设信息
 v_msg = 'SNI:V_{}'.format(str(datetime.now()).split(' ')[0])
 v_success = '获取成功，点击确定自动复制链接'
-
-ssr_attention_link = ''
-v2ray_attention_link = ''
 
 
 # 初始化文档树
@@ -266,17 +264,8 @@ class SSRcS_panel(object):
 
 import socket
 
+
 # 结果播报容器
-report = ''
-
-
-def getReport():
-    global report
-    report = checker()
-    if '差' in report and '异常' in report:
-        easygui.msgbox(report, TITLE, )
-
-
 def isNetChainOK(test_server):
     """
 
@@ -297,26 +286,15 @@ def isNetChainOK(test_server):
 
 
 def checker():
-    global report
     test_list = {
-        'google': ('www.google.com', 443),
         'baidu': ('www.baidu.com', 443)
     }
 
-    PROXY_status = isNetChainOK(test_list['google'])
-    PAC_status = isNetChainOK(test_list['baidu'])
-    Evaluation = ''
-    if PAC_status is True and PROXY_status is False:
-        Evaluation = '当前网络状态良好, 网络代理未开启'
-    elif PAC_status and PROXY_status is True:
-        Evaluation = '网络状态极佳, 代理服务运行正常'
+    PAC_PROXY = isNetChainOK(test_list['baidu'])
+    if PAC_PROXY is False:
+        return False
     else:
-        Evaluation = '当前网络环境较差，且网络代理运行异常'
-
-    report = ">>> www.google.com, 443, {}\n>>> www.baidu.com, 443, {}\n>>> {}" \
-             "".format(str(PROXY_status), str(PAC_status), Evaluation)
-
-    return report
+        return True
 
 
 """#####################机场生态查询模块####################"""
@@ -458,8 +436,6 @@ class sAirportSpider(object):
 
 """###################HOME######################"""
 
-rc = RedisClient()
-
 
 # Please write all initialization functions here
 class PrepareENV(object):
@@ -479,12 +455,6 @@ class PrepareENV(object):
                 os.path.join(ROOT_DATABASE, fup),
                 os.path.join(tempfile.gettempdir(), fup)
             ))
-            easygui.exceptionbox('>>> 环境初始化成功,正在尝试重启脚本', TITLE)
-            try:
-                os.system('python {}'.format(os.path.join(ROOT_PROJECT_PATH, 'main.py')))
-                # sys.exit()
-            except OSError:
-                easygui.exceptionbox('查找失败，请手动重启脚本', TITLE)
 
     @staticmethod
     def init_service_info():
@@ -530,6 +500,24 @@ class PrepareENV(object):
             datefmt="%d-%M-%Y %H:%M:%S",
             level=logging.DEBUG
         )
+
+    @staticmethod
+    def check_network_connection(test_server):
+        """
+        :param test_server: tuple('ip or domain name', port)
+        :return:
+        """
+        s = socket.socket()
+        s.settimeout(4)
+        try:
+            status = s.connect_ex(test_server)
+            if status == 0:
+                s.close()
+                return True
+            else:
+                return False
+        except socket.error as e:
+            return False
 
     def run_start(self, init=False):
         if init is True:
@@ -663,3 +651,10 @@ class V2RaycSpider_Master_Panel(object):
             resp = True
         finally:
             return resp
+
+
+if __name__ == '__main__':
+    if ThreadPoolExecutor(max_workers=1).submit(checker).result():
+        rc = RedisClient()
+    else:
+        easygui.msgbox('网络异常', title=TITLE)

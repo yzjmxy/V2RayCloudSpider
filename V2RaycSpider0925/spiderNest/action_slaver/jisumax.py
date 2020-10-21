@@ -6,16 +6,14 @@ class Action_JiSuMax(BaseAction):
     def __init__(self, silence=True, anti=True, email='@qq.com', life_cycle=61):
         super(Action_JiSuMax, self).__init__(silence, anti, email, life_cycle)
 
-        self.register_url = 'https://jisumax.com/#/register?code=mGUD1Lya'
+        self.register_url = 'https://jisumax.com/#/register?'
 
     def sign_up(self, api):
         WebDriverWait(api, 15) \
             .until(EC.presence_of_element_located((By.XPATH, "//input[@placeholder='邮箱']"))) \
             .send_keys(self.username)
-
         for i in api.find_elements_by_xpath("//input[@placeholder='密码']"):
             i.send_keys(self.password)
-
         api.find_element_by_xpath("//i").click()
 
     def load_any_subscribe(self, api, element_xpath_str: str, href_xpath_str: str, class_: str):
@@ -24,7 +22,7 @@ class Action_JiSuMax(BaseAction):
         api.find_element_by_xpath(
             element_xpath_str).click()
 
-        time.sleep(1)
+        self.wait(api, 10, 'all')
         api.find_element_by_xpath(href_xpath_str).click()
 
         self.subscribe = pyperclip.paste()
@@ -33,9 +31,9 @@ class Action_JiSuMax(BaseAction):
 
     def run(self):
         api = self.set_spiderOption()
-        api.get(self.register_url)
-
         try:
+            api.get(self.register_url)
+
             self.sign_up(api)
 
             self.wait(api, 30, "all")
@@ -48,13 +46,12 @@ class Action_JiSuMax(BaseAction):
             )
 
             print('trojan:{}'.format(self.subscribe))
-
-        except Exception as e:
-            print(e)
+        except NoSuchElementException:
+            print('jisumax ip is blocked')
         finally:
             api.quit()
 
 
 if __name__ == '__main__':
-    ats = Action_JiSuMax(silence=False)
+    ats = Action_JiSuMax()
     ats.run()

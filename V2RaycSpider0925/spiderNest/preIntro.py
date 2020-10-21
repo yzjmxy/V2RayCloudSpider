@@ -381,14 +381,31 @@ def magic_msg(text: str, text_color, show_style='default', bk_color='default'):
 
 
 # 获取FAKE USERAGENT
-def get_header() -> str:
-    from fake_useragent import UserAgent
-    headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) '
-                             'AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.105 Safari/537.36'}
+def get_header(depolyment=False) -> str:
+    if depolyment:
+        from fake_useragent import UserAgent
+        from Panel.master_panel import PrepareENV
+        # fixme: v4.2.1error
+        try:
+            PrepareENV.init_fake_user_agent()
+            return UserAgent().random
+        except Exception as e:
+            print(e)
+            return get_header()
+    else:
+        headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) '
+                                 'AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.105 Safari/537.36'}
 
-    return headers['User-Agent']
-    # fixme: v4.2.1error
-    # return UserAgent().random
+        return headers['User-Agent']
+
+
+def get_proxy(depolyment=False) -> str or bool:
+    proxypool_url = 'http://127.0.0.1:5555/random'
+    if depolyment:
+        try:
+            return 'http://{}'.format(requests.get(proxypool_url).text.strip())
+        except RequestException:
+            return False
 
 
 # ------------------------------------

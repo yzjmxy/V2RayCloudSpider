@@ -57,5 +57,5 @@ class Action_TheSSR(BaseAction):
 
 
 if __name__ == '__main__':
-    ats = Action_TheSSR()
+    ats = Action_TheSSR(silence=False)
     ats.run()

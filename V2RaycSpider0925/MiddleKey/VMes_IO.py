@@ -2,6 +2,7 @@ from spiderNest.preIntro import *
 from MiddleKey.redis_IO import RedisClient
 from config import SYS_AIRPORT_INFO_PATH, REDIS_KEY_NAME_BASE, NGINX_SUBSCRIBE_PATH
 import threading
+import sys
 
 
 def save_login_info(subscribe, class_, life_cycle: str):
@@ -10,21 +11,23 @@ def save_login_info(subscribe, class_, life_cycle: str):
     :param subscribe:
     :param class_:v2ray, ssr, trojan
     """
-    # redis loaded
+    # Redis loaded
     # RedisClient().add(key_name=REDIS_KEY_NAME_BASE.format(class_), subscribe=subscribe)
     threading.Thread(target=RedisClient().add, args=(REDIS_KEY_NAME_BASE.format(class_), subscribe, life_cycle)).start()
 
-    # static data loaded
+    # Static data loaded
     with open(SYS_AIRPORT_INFO_PATH, 'a', encoding='utf-8', newline='') as f:
         writer = csv.writer(f)
         # 入库时间，Vmess,初始化状态:0
         writer.writerow(['{}'.format(life_cycle), '{}'.format(subscribe), class_, '0'])
 
-    try:
-        with open(NGINX_SUBSCRIBE_PATH.format(class_), 'w', encoding='utf-8') as f:
-            f.write(subscribe)
-    except Exception as e:
-        print(e)
+    # Depolyment mode --> nginx
+    if 'linux' in sys.platform:
+        try:
+            with open(NGINX_SUBSCRIBE_PATH.format(class_), 'w', encoding='utf-8') as f:
+                f.write(subscribe)
+        except FileNotFoundError as e:
+            print(e)
 
 
 def vmess_IO(class_):

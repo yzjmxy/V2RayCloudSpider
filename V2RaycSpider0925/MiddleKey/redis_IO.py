@@ -102,9 +102,7 @@ class RedisClient(object):
                             print(f'del-({class_})--{item}')
                             self.db.hdel(key_name, item)
         if deploy:
-            for x in range(10):
-                data_cleaning()
-                time.sleep(60*5)
+            data_cleaning()
 
     @staticmethod
     def check_stale(item, class_='') -> bool:

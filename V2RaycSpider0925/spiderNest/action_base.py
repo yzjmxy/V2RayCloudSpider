@@ -8,8 +8,10 @@ from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.common.by import By
 import selenium.webdriver.support.expected_conditions as EC
+from selenium.common.exceptions import *
 from config import CHROMEDRIVER_PATH, TIME_ZONE_CN
 from MiddleKey.VMes_IO import save_login_info
+from spiderNest.preIntro import get_header,get_proxy
 
 
 class BaseAction(object):
@@ -52,7 +54,7 @@ class BaseAction(object):
     def generate_life_cycle(life_cycle: int) -> str:
         return str(datetime.now(TIME_ZONE_CN) + timedelta(days=life_cycle)).split('.')[0]
 
-    def set_spiderOption(self, ):
+    def set_spiderOption(self, use_proxy=False):
         """浏览器初始化"""
 
         options = ChromeOptions()
@@ -70,8 +72,13 @@ class BaseAction(object):
         options.add_argument('lang=zh_CN.UTF-8')
 
         # 更换头部
-        options.add_argument(
-            'user-agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.80 Safari/537.36 Edg/86.0.622.43"')
+        options.add_argument(f'user-agent={get_header(depolyment=True)}')
+
+        if use_proxy:
+            proxy_ip = get_proxy(True)
+            print(proxy_ip)
+            if proxy_ip:
+                options.add_argument(f'proxy-server={proxy_ip}')
 
         # 静默启动
         if self.silence is True:
@@ -109,6 +116,7 @@ class BaseAction(object):
     @staticmethod
     def wait(api: Chrome, timeout: float, tag_xpath_str):
         if tag_xpath_str == 'all':
+            time.sleep(1)
             WebDriverWait(api, timeout).until(EC.presence_of_all_elements_located)
         else:
             WebDriverWait(api, timeout).until(EC.presence_of_element_located((
