@@ -653,8 +653,9 @@ class V2RaycSpider_Master_Panel(object):
             return resp
 
 
-if __name__ == '__main__':
-    if ThreadPoolExecutor(max_workers=1).submit(checker).result():
-        rc = RedisClient()
-    else:
-        easygui.msgbox('网络异常', title=TITLE)
+if ThreadPoolExecutor(max_workers=1).submit(checker).result():
+    rc = RedisClient()
+else:
+    easygui.msgbox('网络异常', title=TITLE)
+    exit()
+

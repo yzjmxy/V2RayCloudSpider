@@ -78,7 +78,7 @@ class RedisClient(object):
             while True:
                 target_raw: dict = self.db.hgetall(key_name)
                 try:
-                    self.subscribe, end_life = list(target_raw.items()).pop()
+                    self.subscribe, end_life = list(target_raw.items()).pop(0)
                     if self.check_stale(end_life):
                         continue
                     else:
