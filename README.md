@@ -13,11 +13,9 @@
 - 【或直接下载软件】**运行脚本**||**开箱即用**（推荐；约17MB）
 
   - [云彩姬使用说明](https://github.com/QIN2DIM/V2RayCloudSpider/blob/master/V2Ray云彩姬使用说明.md)
-
-  - 下载方案1【Windows用户 or 网速困难户推荐】：浏览器直接[下载软件](https://t.qinse.top/subscribe/v2ray云彩姬.zip)	
-
-  - 下载方案2【Windows用户推荐】：直接下载压缩包文件或可执行文件![Snipaste_2020-10-20_11-04-18](https://i.loli.net/2020/10/20/WwrOToUH7yuKtgM.png)
-
+- 下载方案1【Windows用户 and 网速困难户】：直接[下载安装向导](https://t.qinse.top/subscribe/installer.exe)	
+  
+- 下载方案2【Windows用户推荐】：直接下载压缩包文件或可执行文件![Snipaste_2020-10-20_11-04-18](https://i.loli.net/2020/10/20/WwrOToUH7yuKtgM.png)
   - 下载方案3【Python用户推荐】：Clone项目，项目源代码都在**V2RaycSpider[版本号]**的文件夹中![QQ截图20201020110338](https://i.loli.net/2020/10/20/jaw9JlmuFReWtH8.png)
 
 
