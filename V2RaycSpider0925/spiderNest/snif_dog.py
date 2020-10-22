@@ -54,7 +54,7 @@ class sAirportSpider(object):
 
         # 获取导航语
         def h3Log(target):
-            own = target.find_all('span', class_='fake-TITLE')
+            own = target.find_all('span', class_='fake-install_title')
             souls = []
             for soul in own:
                 try:

@@ -1,4 +1,5 @@
 import csv
+import yaml
 import logging
 import webbrowser
 from datetime import datetime, timedelta
@@ -62,10 +63,18 @@ def INIT_process_docTree():
     if not os.path.exists(SYS_LOCAL_fPATH):
         os.mkdir(SYS_LOCAL_fPATH)
     try:
-        if not SYS_LOCAL_vPATH.split('/')[-1] in os.listdir(SYS_LOCAL_fPATH):
+
+        if os.path.basename(SYS_LOCAL_vPATH) not in os.listdir(SYS_LOCAL_fPATH):
             with open(SYS_LOCAL_vPATH, 'w', encoding='utf-8', newline='') as f:
                 f.writelines(['Time', ',', 'subscribe', ',', '类型', '\n'])
     except FileExistsError:
+        pass
+    try:
+        with open(YAML_PATH, 'w', encoding='utf-8') as f:
+            proj = YAML_PROJECT
+            proj['path'] = os.path.abspath('..')
+            yaml.dump(proj, f, allow_unicode=True)
+    except OSError:
         pass
 
 
@@ -213,7 +222,7 @@ class SSRcS_panel(object):
                     'python3 {}'.format(CLOUD_PATH_BASE.format(verNum, service_con_path)), )
         finally:
             return self.resTip(self.subscribe, mode)
-            # easygui.enterbox(msg=v_success, title=TITLE, default=self.subscribe)
+            # easygui.enterbox(msg=v_success, title=install_title, default=self.subscribe)
 
     @staticmethod
     def resTip(subscribe: str, task_name):
@@ -305,8 +314,8 @@ SYS_LOCAL_aPATH = ''
 
 # Initialize the document tree
 def INIT_airport_docTree():
-    if not os.path.exists(SYS_LOCAL_fPATH):
-        os.mkdir(SYS_LOCAL_fPATH)
+    if not os.path.exists(ROOT_PROJECT_PATH):
+        os.mkdir(ROOT_PROJECT_PATH)
 
 
 # Save data to local
@@ -362,7 +371,7 @@ class sAirportSpider(object):
 
         # 获取导航语
         def h3Log(target):
-            own = target.find_all('span', class_='fake-TITLE')
+            own = target.find_all('span', class_='fake-install_title')
             souls = []
             for soul in own:
                 try:
@@ -502,22 +511,18 @@ class PrepareENV(object):
         )
 
     @staticmethod
-    def check_network_connection(test_server):
-        """
-        :param test_server: tuple('ip or domain name', port)
-        :return:
-        """
-        s = socket.socket()
-        s.settimeout(4)
-        try:
-            status = s.connect_ex(test_server)
-            if status == 0:
-                s.close()
-                return True
-            else:
-                return False
-        except socket.error as e:
-            return False
+    def init_VCS():
+        def pull_updated_model():
+            res = requests.get('https://t.qinse.top/subscribe/updated.exe')
+            with open(UPDATED_MODEL, 'wb', ) as f:
+                f.write(res.content)
+
+        from MiddleKey.version_IO import VersionControlSystem
+        if os.path.basename(UPDATED_MODEL) not in os.listdir(SYS_LOCAL_fPATH):
+            print('pull updated_model')
+            ThreadPoolExecutor(max_workers=1).submit(pull_updated_model)
+        else:
+            ThreadPoolExecutor(max_workers=1).submit(VersionControlSystem().run, True)
 
     def run_start(self, init=False):
         if init is True:
@@ -530,13 +535,16 @@ class PrepareENV(object):
             # 初始化Python第三方库
             # self.init_requirements()
 
+            # 初始化系统文档
+            INIT_airport_docTree()
+
             self.init_logs()
 
             # 初始化核心文档树
             INIT_process_docTree()
 
-            # 初始化机场狗文档树
-            INIT_airport_docTree()
+            # 检查版本更新
+            self.init_VCS()
 
             return rc.test()
 
@@ -578,6 +586,7 @@ class V2RaycSpider_Master_Panel(object):
         logging.exception(info)
 
     def home_menu(self):
+        from MiddleKey.version_IO import VersionControlSystem
         """主菜单"""
         # ['[1]查看机场生态', '[2]获取订阅链接', '[3]检查版本更新', '[4]退出', ]
         resp = True
@@ -590,7 +599,7 @@ class V2RaycSpider_Master_Panel(object):
             elif '[3]打开本地文件' in usr_c:
                 os.startfile(SYS_LOCAL_vPATH)
             elif '更新' in usr_c:
-                easygui.textbox("封测阶段暂不开放联网更新接口！", title='V2Ray云彩姬')
+                ThreadPoolExecutor(max_workers=1).submit(VersionControlSystem().run)
             else:
                 resp = False
         except TypeError:
@@ -658,4 +667,3 @@ if ThreadPoolExecutor(max_workers=1).submit(checker).result():
 else:
     easygui.msgbox('网络异常', title=TITLE)
     exit()
-

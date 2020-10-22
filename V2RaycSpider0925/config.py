@@ -2,9 +2,10 @@ import os
 import sys
 
 # ---------------------------------------------------
-# 云彩姬版本号,版本号必须与工程版本(文件名)号一致
+# 云彩姬版本号,版本号必须与工程版本(文件名)号一致 请勿改动!
 # ---------------------------------------------------
 verNum = '0925'
+version = '4.5.1'
 # ---------------------------------------------------
 # PC(链接获取)进程锁死的冷却时间
 # 进程锁死时长(min)，建议type：float∈(0,1]
@@ -68,12 +69,19 @@ NGINX_SUBSCRIBE_PATH = os.path.join(NGINX_RES_PATH, '{}.txt')
 """********************************* Action set/PATH->Local ********************************"""
 # TODO: 当前版本不提供安装导航，不支持diy安装目录，若想更改缓存路径(默认当前文件夹)，请改动源代码
 # 工程目录
-ROOT_PROJECT_PATH = 'C:\\V2RaySpider' if 'win' in sys.platform else os.path.dirname(__file__)
+ROOT_PROJECT_PATH = 'C:\\V2RaySpider' if 'win' in sys.platform else os.path.abspath('.')
 # 软件本地根目录
 SYS_LOCAL_fPATH = os.path.join(ROOT_PROJECT_PATH, 'dataBase')
 # 访问记录(系统核心文件，请勿删改)
 SYS_LOCAL_vPATH = SYS_LOCAL_fPATH + '/log_VMess.txt'
 SYS_AIRPORT_INFO_PATH = SYS_LOCAL_fPATH + '/log_information.csv'
+SYS_VERSION_CONTROL = os.path.join(SYS_LOCAL_fPATH, 'vcs.txt')
+UPDATED_MODEL = os.path.join(SYS_LOCAL_fPATH, 'updated.exe')
+YAML_PATH = os.path.join(SYS_LOCAL_fPATH, 'user.yaml')
+YAML_PROJECT = {
+    'path': '',
+    'version': f'{version}'
+}
 # 日志路径
 SYS_LOG_PATH = SYS_LOCAL_fPATH + '/logs.log'
 # 采集模式，若服务器设置有误 则本机启动
@@ -82,10 +90,11 @@ START_MODE = 'local' if ECS_HOSTNAME == '' else 'cloud'
 """********************************* The other set ********************************"""
 
 # 我就是云彩姬!
-TITLE = f'V2Ray云彩姬_v{verNum}'
+TITLE = f'V2Ray云彩姬_v{version}'
 
 # 时区
 import pytz
 
 TIME_ZONE_CN = pytz.timezone('Asia/Shanghai')
 TIME_ZONE_NY = pytz.timezone('America/New_York')
+
