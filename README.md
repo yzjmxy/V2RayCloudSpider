@@ -4,19 +4,17 @@
 
 ## :carousel_horse: Intro
 
-- 运行`V2Ray云采姬.exe` 或压缩文件中的`main.exe`本即可启动**通用版本云彩姬**获取订阅连接
+- 运行`V2Ray云彩姬.exe` 即可启动**v2ray云彩姬**获取订阅连接。
+- **运行脚本**||**开箱即用**
+- [云彩姬使用说明](https://github.com/QIN2DIM/V2RayCloudSpider/blob/master/V2Ray云彩姬使用说明.md)
 
 ## :eagle: Quick Start
 
-- 【下载整个项目】下载项目并解压（约36.6MB）![QQ截图20201013211025](https://i.loli.net/2020/10/13/yeBcA3dXwU8FOS4.png)
+- 下载方案1【Windows用户 and 网速困难户】(推荐；约17MB)：[下载安装向导](https://t.qinse.top/subscribe/installer.exe)	
 
-- 【或直接下载软件】**运行脚本**||**开箱即用**（推荐；约17MB）
+- 下载方案2【Python用户推荐】：Clone项目，项目源代码都在**V2RaycSpider[驱动号]**的文件夹中
 
-  - [云彩姬使用说明](https://github.com/QIN2DIM/V2RayCloudSpider/blob/master/V2Ray云彩姬使用说明.md)
-- 下载方案1【Windows用户 and 网速困难户】：直接[下载安装向导](https://t.qinse.top/subscribe/installer.exe)	
-  
-- 下载方案2【Windows用户推荐】：直接下载压缩包文件或可执行文件![Snipaste_2020-10-20_11-04-18](https://i.loli.net/2020/10/20/WwrOToUH7yuKtgM.png)
-  - 下载方案3【Python用户推荐】：Clone项目，项目源代码都在**V2RaycSpider[版本号]**的文件夹中![QQ截图20201020110338](https://i.loli.net/2020/10/20/jaw9JlmuFReWtH8.png)
+  ![Snipaste_2020-10-22_13-53-00](https://i.loli.net/2020/10/22/s9vC6RI7FtVJahe.png)
 
 
 ## :video_game: Advanced Gameplay
@@ -149,9 +147,8 @@
 
 - [x] 支持Trojan-go、Trojan-gfw机场的采集
 - [ ] 融合网络代理核心，形成自洽的科学上网模块
-- [ ] 添加{邮件发送模块}，支持开发者账号群发订阅链接
 - [x] 合并订阅链接消息队列，PC端可查看目前在库最多25条Subscribe订阅链接，并择一获取
   - [x] 合并队列
   - [x] 查看链接
   - [x] 择一获取
-- [ ] 逐渐停用easyGUI前端模块，移植web操作平台，兼容跨平台访问(手机，电脑，嵌入式系统)
+- [ ] 逐渐停用easyGUI前端模块，兼容跨平台访问(手机，电脑，嵌入式系统)
